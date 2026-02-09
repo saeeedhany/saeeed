@@ -60,7 +60,7 @@ function setActiveLink() {
     const allTargets = [];
     document.querySelectorAll('[id]').forEach(el => {
         // Check if this ID is referenced in sidebar
-        const hasLink = Array.from(sidebarLinks).some(link => 
+        const hasLink = Array.from(sidebarLinks).some(link =>
             link.getAttribute('href') === `#${el.id}`
         );
         if (hasLink) {
@@ -87,7 +87,7 @@ function setActiveLink() {
     sidebarLinks.forEach(link => {
         link.classList.remove('active');
         const href = link.getAttribute('href');
-        
+
         if (href === `#${currentSection}`) {
             link.classList.add('active');
         }
@@ -130,17 +130,17 @@ headingsWithId.forEach(heading => {
 
 // Smooth scroll enhancement for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
+    anchor.addEventListener('click', function(e) {
         const href = this.getAttribute('href');
-        
+
         // Skip if it's just "#"
         if (href === '#') return;
-        
+
         e.preventDefault();
-        
+
         const targetId = href.substring(1);
         const targetElement = document.getElementById(targetId);
-        
+
         if (targetElement) {
             const headerOffset = 100;
             const elementPosition = targetElement.getBoundingClientRect().top;
@@ -161,7 +161,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 document.addEventListener('DOMContentLoaded', function() {
     const filterTags = document.querySelectorAll('.filter-tag');
     const blogPosts = document.querySelectorAll('.blog-post');
-    
+
     if (filterTags.length === 0 || blogPosts.length === 0) {
         return; // Not on blog page
     }
@@ -169,16 +169,16 @@ document.addEventListener('DOMContentLoaded', function() {
     filterTags.forEach(tag => {
         tag.addEventListener('click', function() {
             const selectedTag = this.getAttribute('data-tag');
-            
+
             // Update active state
             filterTags.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
-            
+
             // Filter posts
             let visibleCount = 0;
             blogPosts.forEach(post => {
                 const postTags = post.getAttribute('data-tags');
-                
+
                 if (selectedTag === 'all' || postTags.includes(selectedTag)) {
                     post.classList.remove('hidden');
                     visibleCount++;
@@ -186,19 +186,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     post.classList.add('hidden');
                 }
             });
-            
+
             // Handle empty state
             handleEmptyState(visibleCount);
         });
     });
-    
+
     function handleEmptyState(visibleCount) {
         // Remove existing empty state message
         const existingMessage = document.querySelector('.no-posts-message');
         if (existingMessage) {
             existingMessage.remove();
         }
-        
+
         if (visibleCount === 0) {
             // Add empty state message
             const message = document.createElement('div');
@@ -227,7 +227,7 @@ techs.forEach(tech => {
 
     tech.addEventListener("mousemove", (e) => {
         icon.style.left = e.clientX + 15 + "px";
-        icon.style.top  = e.clientY + 15 + "px";
+        icon.style.top = e.clientY + 15 + "px";
     });
 
 });

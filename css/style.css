@@ -133,7 +133,7 @@ nav {
 
 .nav-mobile-links {
     margin-top: 40%;
-    list-style-type: none; 
+    list-style-type: none;
 }
 
 .nav-mobile-links .pages {
@@ -569,6 +569,110 @@ a, button {
     transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
+/* Programming Languages – Resume Style */
+.lang-skill {
+    margin-bottom: 1.4rem;
+}
+
+.lang-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    margin-bottom: 0.35rem;
+}
+
+.lang-header span:first-child {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.lang-header .level {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+.lang-bar {
+    height: 4px;
+    background-color: var(--bg-tertiary);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.lang-bar span {
+    display: block;
+    height: 100%;
+    background-color: var(--accent);
+    opacity: 0.85;
+}
+
+/* Skill Groups */
+.skill-group {
+    margin-bottom: 2.5rem;
+}
+
+.skill-group h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.15rem;
+    color: var(--text-primary);
+}
+
+/* Experience Timeline */
+.timeline {
+    position: relative;
+    margin-top: 2rem;
+    padding-left: 2rem;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--border);
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 2.5rem;
+}
+
+.timeline-marker {
+    position: absolute;
+    left: -2px;
+    top: 0.4rem;
+    width: 12px;
+    height: 12px;
+    background-color: var(--bg-primary);
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+}
+
+.timeline-content {
+    padding-left: 1.5rem;
+}
+
+.timeline-date {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 0.3rem;
+}
+
+.timeline-place {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.6rem;
+}
+
+.timeline-content ul {
+    margin-left: 1.2rem;
+}
+
+
 /* Blog Post Styling */
 .blog-post {
     margin-bottom: 3rem;
@@ -675,7 +779,7 @@ article.blog-post {
     pointer-events: none;
     opacity: 0;
     transform: scale(0.8);
-    transition: 
+    transition:
         opacity 0.2s ease,
         transform 0.2s ease;
     z-index: 1000;

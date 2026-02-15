@@ -42,7 +42,7 @@
         <div class="mobile-sidebar">
             <h3>On this page</h3>
             <ul class="sidebar-nav">
-                <li><a href="#skills">Programming Languages</a></li>
+                <li><a href="#skills">Tech Stack &amp; Skills</a></li>
                 <li><a href="#projects">CLI Tools & Projects</a></li>
                 <li><a href="#deasy" class="sub-item">deasy (2026)</a></li>
                 <li><a href="#yduts" class="sub-item">yduts (2025)</a></li>
@@ -92,112 +92,162 @@
                 </section>
 
                 <section id="skills">
-                    <h2>Programming Languages</h2>
+                    <h2>Tech Stack & Skills</h2>
 
-                    <!-- Web -->
-                    <div class="skill-group">
-                        <h3>Web</h3>
+                    <!-- Floating icon for hovering over tech names -->
+                    <img id="tech-icon" alt="Technology icon" />
 
-                        <div class="lang-skill">
-                            <div class="lang-header">
-                                <span class="tech" data-icon="">
-                                    JavaScript
-                                </span>
-                                <span class="level">Primary</span>
+                    <div class="skills-container">
+                        <!-- Web Development - Everything together -->
+                        <div class="skill-category">
+                            <h3>Web Development</h3>
+
+                            <div class="skill-subsection">
+                                <h4>Languages</h4>
+                                <div class="lang-skill">
+                                    <div class="lang-header">
+                                        <span class="tech" data-icon="./assets/icons/javascript.svg">JavaScript</span>
+                                        <span class="level">Primary</span>
+                                    </div>
+                                    <div class="lang-bar">
+                                        <span style="width: 85%"></span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="lang-bar">
-                                <span style="width: 85%"></span>
+
+                            <div class="skill-subsection">
+                                <h4>Markup & Styling</h4>
+                                <div class="tech-items">
+                                    <span class="tech-item">HTML</span>
+                                    <span class="tech-item">CSS</span>
+                                </div>
+                            </div>
+
+                            <div class="skill-subsection">
+                                <h4>Frameworks & Libraries</h4>
+                                <div class="tech-items">
+                                    <span class="tech-item">React</span>
+                                    <span class="tech-item">Node.js</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="lang-skill">
-                            <div class="lang-header">
-                                <span class="tech" data-icon="">
-                                    HTML / CSS
-                                </span>
-                                <span class="level">Primary</span>
-                            </div>
-                            <div class="lang-bar">
-                                <span style="width: 90%"></span>
-                            </div>
-                        </div>
-                    </div>
+                        <!-- Systems & Low-Level - Everything together -->
+                        <div class="skill-category">
+                            <h3>Systems & Low-Level</h3>
 
-                    <!-- Systems & Low-Level -->
-                    <div class="skill-group">
-                        <h3>Systems & Low-Level</h3>
+                            <div class="skill-subsection">
+                                <h4>Languages</h4>
+                                <div class="lang-skill">
+                                    <div class="lang-header">
+                                        <span class="tech" data-icon="./assets/icons/c.svg">C</span>
+                                        <span class="level">Primary</span>
+                                    </div>
+                                    <div class="lang-bar">
+                                        <span style="width: 85%"></span>
+                                    </div>
+                                </div>
 
-                        <div class="lang-skill">
-                            <div class="lang-header">
-                                <span class="tech" data-icon="">
-                                    C
-                                </span>
-                                <span class="level">Primary</span>
-                            </div>
-                            <div class="lang-bar">
-                                <span style="width: 85%"></span>
-                            </div>
-                        </div>
+                                <div class="lang-skill">
+                                    <div class="lang-header">
+                                        <span class="tech" data-icon="./assets/icons/cpp.svg">C++</span>
+                                        <span class="level">Working Knowledge</span>
+                                    </div>
+                                    <div class="lang-bar">
+                                        <span style="width: 65%"></span>
+                                    </div>
+                                </div>
 
-                        <div class="lang-skill">
-                            <div class="lang-header">
-                                <span class="tech" data-icon="">
-                                    Assembly (x86)
-                                </span>
-                                <span class="level">Working Knowledge</span>
+                                <div class="lang-skill">
+                                    <div class="lang-header">
+                                        <span class="tech" data-icon="./assets/icons/assembly.svg">Assembly (x86)</span>
+                                        <span class="level">Working Knowledge</span>
+                                    </div>
+                                    <div class="lang-bar">
+                                        <span style="width: 70%"></span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="lang-bar">
-                                <span style="width: 70%"></span>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Scripting & Automation -->
-                    <div class="skill-group">
-                        <h3>Scripting & Automation</h3>
-
-                        <div class="lang-skill">
-                            <div class="lang-header">
-                                <span class="tech" data-icon="">
-                                    Python
-                                </span>
-                                <span class="level">Primary</span>
-                            </div>
-                            <div class="lang-bar">
-                                <span style="width: 80%"></span>
+                            <div class="skill-subsection">
+                                <h4>Tools & Concepts</h4>
+                                <div class="tech-items">
+                                    <span class="tech-item">Linux Internals</span>
+                                    <span class="tech-item">POSIX</span>
+                                    <span class="tech-item">GDB</span>
+                                    <span class="tech-item">Make/CMake</span>
+                                    <span class="tech-item">Embedded Systems</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="lang-skill">
-                            <div class="lang-header">
-                                <span class="tech" data-icon="">
-                                    Bash / Zsh
-                                </span>
-                                <span class="level">Daily Use</span>
+                        <!-- Scripting & Automation -->
+                        <div class="skill-category">
+                            <h3>Scripting & Automation</h3>
+
+                            <div class="skill-subsection">
+                                <h4>Languages</h4>
+                                <div class="lang-skill">
+                                    <div class="lang-header">
+                                        <span class="tech" data-icon="./assets/icons/python.svg">Python</span>
+                                        <span class="level">Primary</span>
+                                    </div>
+                                    <div class="lang-bar">
+                                        <span style="width: 80%"></span>
+                                    </div>
+                                </div>
+
+                                <div class="lang-skill">
+                                    <div class="lang-header">
+                                        <span class="tech" data-icon="./assets/icons/bash.svg">Bash</span>
+                                        <span class="level">Daily Use</span>
+                                    </div>
+                                    <div class="lang-bar">
+                                        <span style="width: 75%"></span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="lang-bar">
-                                <span style="width: 75%"></span>
+
+                            <div class="skill-subsection">
+                                <h4>Tools</h4>
+                                <div class="tech-items">
+                                    <span class="tech-item">Git</span>
+                                    <span class="tech-item">Docker</span>
+                                    <span class="tech-item">Vim/Neovim</span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Machine Learning / AI -->
-                    <div class="skill-group">
-                        <h3>Machine Learning / AI</h3>
+                        <!-- Machine Learning & AI -->
+                        <div class="skill-category">
+                            <h3>Machine Learning & AI</h3>
 
-                        <div class="lang-skill">
-                            <div class="lang-header">
-                                <span class="tech" data-icon="">
-                                    Python (ML)
-                                </span>
-                                <span class="level">Applied</span>
+                            <div class="skill-subsection">
+                                <h4>Languages</h4>
+                                <div class="lang-skill">
+                                    <div class="lang-header">
+                                        <span class="tech" data-icon="./assets/icons/python.svg">Python</span>
+                                        <span class="level">Applied</span>
+                                    </div>
+                                    <div class="lang-bar">
+                                        <span style="width: 70%"></span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="lang-bar">
-                                <span style="width: 55%"></span>
+
+                            <div class="skill-subsection">
+                                <h4>Frameworks & Libraries</h4>
+                                <div class="tech-items">
+                                    <span class="tech-item">TensorFlow</span>
+                                    <span class="tech-item">OpenCV</span>
+                                    <span class="tech-item">NumPy</span>
+                                    <span class="tech-item">Pandas</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </section>
+
 
 
                 <section id="projects">
@@ -269,62 +319,62 @@
 
                     <div class="timeline">
 
+                        <!-- SideQ -->
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+
+                            <div class="timeline-content">
+                                <span class="timeline-date">2023 – Present</span>
+                                <h3 id="sideq">Programming Mentor</h3>
+                                <p class="timeline-place">SideQ</p>
+
+                                <ul>
+                                    <li>Created structured learning paths covering core programming concepts</li>
+                                    <li>Designed practical coding exercises and projects for skill development</li>
+                                    <li>Provided one-on-one mentorship and code review sessions</li>
+                                    <li>Helped students transition from tutorials to building actual applications</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- SEO & Web Development -->
+                        <div class="timeline-item">
+                            <div class="timeline-marker"></div>
+
+                            <div class="timeline-content">
+                                <span class="timeline-date">2024 – Present</span>
+                                <h3 id="seo">SEO Specialist & Web Developer</h3>
+                                <p class="timeline-place">
+                                    E-commerce Projects —
+                                    <a href="https://beytna.store/" target="_blank">Beytna Store</a>,
+                                    <a href="https://decora-homestore.com/" target="_blank">Decora Home Store</a>
+                                </p>
+
+                                <ul>
+                                    <li>Optimized page load times and Core Web Vitals scores</li>
+                                    <li>Implemented structured data markup and schema for better indexing</li>
+                                    <li>Enhanced site architecture and internal linking structure</li>
+                                    <li>Improved mobile responsiveness and accessibility standards</li>
+                                    <li>Developed custom front-end features using JavaScript and CSS</li>
+                                </ul>
+                            </div>
+                        </div>
+
                         <!-- Freelance Front-End -->
                         <div class="timeline-item">
                             <div class="timeline-marker"></div>
 
                             <div class="timeline-content">
                                 <span class="timeline-date">2022 – 2024</span>
-                                <h3 id="freelance">Front-End Freelancer</h3>
-                                <p class="timeline-place">
-                                    Online communities & freelance platforms
-                                </p>
+                                <h3 id="freelance">Front-End Developer</h3>
+                                <p class="timeline-place">Freelance</p>
 
                                 <ul>
-                                    <li>Worked on front-end tasks through developer communities and freelance platforms</li>
-                                    <li>Built and modified user interfaces using HTML, CSS, and JavaScript</li>
-                                    <li>Collaborated with clients in fast-paced, informal environments</li>
-                                    <li>Gained real-world experience handling unclear requirements and rapid iteration</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-marker"></div>
-
-                            <div class="timeline-content">
-                                <span class="timeline-date">2024 – Present</span>
-                                <h3 id="seo">SEO Enhancer & Web Developer</h3>
-                                <p class="timeline-place">
-                                    E-commerce websites —
-                                    <a href="https://beytna.store/" target="_blank">Beytna Store</a>,
-                                    <a href="https://decora-homestore.com/" target="_blank">Decora Home Store</a>
-                                </p>
-
-                                <ul>
-                                    <li>Improved website performance, structure, and overall SEO strategy</li>
-                                    <li>Optimized loading speed, indexing, and technical SEO foundations</li>
-                                    <li>Enhanced site architecture and accessibility</li>
-                                    <li>Developed and maintained clean, scalable front-end implementations</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- SideQ -->
-                        <div class="timeline-item">
-                            <div class="timeline-marker"></div>
-
-                            <div class="timeline-content">
-                                <span  id="sideq" class="timeline-date">2023 – Present</span>
-                                <h3>SideQ</h3>
-                                <p class="timeline-place">
-                                    Programming Mentor
-                                </p>
-
-                                <ul>
-                                    <li>Taught programming fundamentals to beginners</li>
-                                    <li>Focused on practical, hands-on problem solving</li>
-                                    <li>Helped learners build confidence through real examples and projects</li>
+                                    <li>Developed responsive web interfaces using HTML, CSS, and JavaScript</li>
+                                    <li>Translated design mockups into functional, pixel-perfect implementations</li>
+                                    <li>Collaborated with backend developers to integrate APIs</li>
+                                    <li>Maintained and refactored existing codebases for better performance</li>
+                                    <li>Adapted to different coding styles and project requirements</li>
                                 </ul>
                             </div>
                         </div>
@@ -409,7 +459,7 @@
             <aside class="sidebar">
                 <h3>On this page</h3>
                 <ul class="sidebar-nav">
-                    <li><a href="#skills">Programming Languages</a></li>
+                    <li><a href="#skills">Tech Stack &amp; Skills</a></li>
                     <li><a href="#projects">CLI Tools & Projects</a></li>
                     <li><a href="#deasy" class="sub-item">deasy (2026)</a></li>
                     <li><a href="#yduts" class="sub-item">yduts (2025)</a></li>

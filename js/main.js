@@ -231,4 +231,3 @@ techs.forEach(tech => {
     });
 
 });
-

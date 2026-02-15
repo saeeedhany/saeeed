@@ -635,10 +635,6 @@ a, button {
     transition: border-color 0.2s linear;
 }
 
-.skill-category:hover {
-    border-color: var(--accent);
-}
-
 .skill-category > h3 {
     font-size: 1.15rem;
     font-weight: 600;

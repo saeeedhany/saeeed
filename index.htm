@@ -51,6 +51,7 @@
                 <li><a href="#journey">My Journey</a></li>
                 <li><a href="#education">Education</a></li>
                 <li><a href="#semu" class="sub-item">SEMU (2022-2026)</a></li>
+                <li><a href="#writing">Recent Writing</a></li>
             </ul>
             <ul class="nav-mobile-links">
                 <li class="pages"><a href="#about" class="active">About Me</a></li>
@@ -453,6 +454,36 @@
                         real-time systems, AI pipelines, and full-stack development.
                     </p>
                 </section>
+
+                <section id="writing">
+                    <h2>Recent Writing</h2>
+
+                    <div class="recent-posts-list" id="recent-posts-list">
+
+                        <a href="posts/why-vim.htm" class="recent-post-row" data-modified="2026-03-01">
+                            <span class="recent-post-title">Why Vim</span>
+                            <span class="recent-post-info">CLI, Vim · Mar 2026</span>
+                        </a>
+
+                        <a href="posts/why-i-love-operating-systems.htm" class="recent-post-row" data-modified="2026-02-01">
+                            <span class="recent-post-title">Why I Love Operating Systems</span>
+                            <span class="recent-post-info">Systems, Linux · Feb 2026</span>
+                        </a>
+
+                        <a href="posts/speech-recognition.htm" class="recent-post-row" data-modified="2026-01-15">
+                            <span class="recent-post-title">Speech Recognition</span>
+                            <span class="recent-post-info">Speech, Systems · Jan 2026</span>
+                        </a>
+
+                        <a href="posts/torrent.htm" class="recent-post-row" data-modified="2026-03-21">
+                            <span class="recent-post-title">Torrent</span>
+                            <span class="recent-post-info">Networks, CLI · Jan 2026</span>
+                        </a>
+
+                    </div>
+
+                    <p style="margin-top: 1.5rem;"><a href="blog.htm">All posts →</a></p>
+                </section>
             </main>
 
             <!-- Sidebar -->
@@ -468,10 +499,22 @@
                     <li><a href="#journey">My Journey</a></li>
                     <li><a href="#education">Education</a></li>
                     <li><a href="#semu" class="sub-item">SEMU (2022-2026)</a></li>
+                    <li><a href="#writing">Recent Writing</a></li>
                 </ul>
             </aside>
         </div>
 
         <script src="js/main.js"></script>
+
+        <script>
+            // Auto-sort recent posts by data-modified (most recently edited first)
+            (function () {
+                const list = document.getElementById('recent-posts-list');
+                if (!list) return;
+                const rows = Array.from(list.querySelectorAll('.recent-post-row'));
+                rows.sort((a, b) => new Date(b.dataset.modified) - new Date(a.dataset.modified));
+                rows.forEach(r => list.appendChild(r));
+            })();
+        </script>
     </body>
 </html>

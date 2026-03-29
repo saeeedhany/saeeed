@@ -886,3 +886,99 @@ article.blog-post {
         transform 0.2s ease;
     z-index: 1000;
 }
+
+/* Recent Writing — Home Page */
+.recent-posts-list {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.recent-post-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    transition: background-color 0.15s ease;
+    border-radius: 4px;
+    margin: 0 -0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.recent-post-row:first-child {
+    border-top: 1px solid var(--border);
+}
+
+.recent-post-row:hover {
+    /* background-color: var(--hover); */
+}
+
+.recent-post-row:hover .recent-post-title {
+    color: var(--accent);
+}
+
+.recent-post-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: color 0.2s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recent-post-info {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Sort Dropdown */
+.filter-tags {
+    align-items: center;
+}
+
+.sort-select {
+    margin-left: auto;
+    appearance: none;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.4rem 2rem 0.4rem 0.9rem;
+    flex-shrink: 0;
+    font-size: 0.875rem;
+    font-family: 'Inter', sans-serif;
+    color: var(--text-secondary);
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236e7681' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.6rem center;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.sort-select:hover {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+}
+
+.sort-select:focus {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+}
+
+.sort-select option {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+@media (max-width: 765px) {
+    .sort-select {
+        margin-left: 0;
+    }
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Why I Love Operating Systems - Saeed Hany</title>
+        <link rel="stylesheet" href="../css/style.css" />
+        <link rel="stylesheet" href="../css/all.min.css" />
+        <link rel="stylesheet" href="../css/blog-post.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <!-- Header -->
+        <header>
+            <nav>
+                <a href="../index.htm" class="logo">Saeed Hany</a>
+                <ul class="nav-links">
+                    <li class="pages"><a href="../index.htm">About Me</a></li>
+                    <li class="pages"><a href="../projects.htm">Projects</a></li>
+                    <li class="pages"><a href="../blog.htm" class="active">Blog</a></li>
+                    <li><a href="../resume.pdf" target="_blank" class="external-link">Resume <i class="fas fa-external-link-alt"></i></a></li>
+                    <li class="social-icons">
+                        <a href="https://github.com/saeeedhany" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://discord.com/users/1098257642356482099" target="_blank" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+                        <a href="https://www.youtube.com/@Saeeedhany" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://x.com/S8eed_" target="_blank" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                    </li>
+                    <li class="left">
+                        <button class="theme-toggle" aria-label="Toggle theme">
+                            <i class="fas fa-sun"></i>
+                        </button>
+                        <button class="mobile-menu-btn" aria-label="Toggle menu">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Mobile Sidebar -->
+        <div class="mobile-sidebar">
+            <h3>On this page</h3>
+            <ul class="sidebar-nav" id="toc-mobile"></ul>
+            <ul class="nav-mobile-links">
+                <li class="pages"><a href="../index.htm">About Me</a></li>
+                <li class="pages"><a href="../projects.htm">Projects</a></li>
+                <li class="pages"><a href="../blog.htm">Blog</a></li>
+                <li class="pages"><a href="../resume.pdf" target="_blank" class="external-link">Resume <i class="fas fa-external-link-alt"></i></a></li>
+                <li class="social-mobile-icons">
+                    <a href="https://github.com/saeeedhany" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="https://discord.com/users/1098257642356482099" target="_blank" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+                    <a href="https://www.youtube.com/@Saeeedhany" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://x.com/S8eed_" target="_blank" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="overlay"></div>
+
+        <!-- Post Container -->
+        <div class="post-container">
+            <main class="post-main">
+
+                <a href="../blog.htm" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to Blog
+                </a>
+
+                <div class="post-header">
+                    <h1>Why I Love Operating Systems</h1>
+                    <div class="post-meta">
+                        <span class="post-date">Coming soon</span>
+                        <div class="post-tags">
+                            <span class="tag">Systems</span>
+                            <span class="tag">Linux</span>
+                            <span class="tag">OS</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- WIP Banner -->
+                <div class="wip-banner">
+                    <div class="wip-icon"><i class="fa-solid fa-pen"></i></div>
+                    <div class="wip-text">
+                        <h4>This post is still being written</h4>
+                        <p>
+                            I'm working on this one. Come back later, or if you're curious about the topic,
+                            feel free to reach out on <a href="https://x.com/S8eed_" target="_blank">Twitter</a>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="post-content" id="post-content"></div>
+
+            </main>
+
+            <aside class="post-sidebar sidebar">
+                <h3>On this page</h3>
+                <ul class="sidebar-nav" id="toc"></ul>
+            </aside>
+        </div>
+
+        <script src="../js/main.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+        <script>
+            const markdown = `
+<!-- Write your Markdown content here when you're ready -->
+`;
+            const content = document.getElementById('post-content');
+            if (markdown.trim()) {
+                content.innerHTML = marked.parse(markdown);
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                setTimeout(() => {
+                    const headings = content.querySelectorAll('h2, h3');
+                    const toc = document.getElementById('toc');
+                    const tocMobile = document.getElementById('toc-mobile');
+
+                    headings.forEach((heading, i) => {
+                        if (!heading.id) heading.id = 'heading-' + i;
+                        const li = document.createElement('li');
+                        const a = document.createElement('a');
+                        a.href = '#' + heading.id;
+                        a.textContent = heading.textContent;
+                        if (heading.tagName === 'H3') a.classList.add('sub-item');
+                        li.appendChild(a);
+                        toc.appendChild(li.cloneNode(true));
+                        tocMobile.appendChild(li);
+                    });
+                }, 100);
+            });
+        </script>
+    </body>
+</html>

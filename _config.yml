@@ -1,0 +1,53 @@
+title: "signal/noise"
+tagline: "Tech thoughts, clear signal."
+description: "A personal blog on systems, software, and the tech that shapes how we think."
+url: ""
+baseurl: ""
+author:
+  name: "Saeed"
+  handle: "@saeed"
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: /posts/:year/:month/:day/:title/
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+# Pagination
+paginate: 10
+paginate_path: "/posts/page:num/"
+
+# Collections
+collections:
+  posts:
+    output: true
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      author: "Your Name"
+
+# Exclude from build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - node_modules/
+
+# Categories (used for organization)
+categories_label:
+  systems: "Systems"
+  security: "Security"
+  ai: "Artificial Intelligence"
+  web: "Web Dev"
+  tools: "Tools & Workflow"
+  thoughts: "Thoughts"

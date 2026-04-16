@@ -45,7 +45,7 @@ Yeah, not in programming directly, and not exactly what I was aiming for yet. Bu
 
 ---
 
-When I got the online job in marketing, I didn’t even have internet in the apartment I was staying in. The connection I was borrowing from the place next door wasn’t stable, so I had to move my laptop, mouse, and keyboard (which also has its own story you can read here → [The Old Room Story](./../404.html)) to another place.
+When I got the online job in marketing, I didn’t even have internet in the apartment I was staying in. The connection I was borrowing from the place next door wasn’t stable, so I had to move my laptop, mouse, and keyboard (which also has its own story you can read here → [The Old Room Story](./../404.html) to another place.
 
 At that time, I spent a period studying and working on an ironing table.
 

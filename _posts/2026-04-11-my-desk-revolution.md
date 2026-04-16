@@ -9,6 +9,7 @@ pinned: true
 read_time: 9
 excerpt: "This is not just a desk story. It's about growth, patience, and the journey from having almost nothing to finally building something that feels truly mine."
 ---
+![banner](/assets/images/banner.jpg)
 This post means more than one thing to me.
 
 First, it’s the first real post I’m publishing on a blog that I honestly don’t even know if it will continue the way it is now or not.
@@ -48,7 +49,7 @@ When I got the online job in marketing, I didn’t even have internet in the apa
 
 At that time, I spent a period studying and working on an ironing table.
 
-![My First Laptop](/assets/images/old-but-new.jpg)
+![My First Laptop](/assets/images/Old.jpg)
 
 ---
 
@@ -84,6 +85,7 @@ And that’s when things started to feel different.
 That’s when the story of the *old desk* really begins.
 
 ---
+![banner](/assets/images/old-but-new.jpg)
 
 This was the first real setup I ever had, the first time I sat down and felt like I actually had something I always wanted.
 

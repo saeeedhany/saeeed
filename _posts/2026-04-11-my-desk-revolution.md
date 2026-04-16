@@ -32,7 +32,7 @@ At the very beginning, my journey was just about studying, browsing, and playing
 Back then, I didn’t have a laptop, no desk, nothing. So I borrowed a laptop from my uncle, used an old table we already had at home, and got a mouse from a friend (shoutout to Mahmoud El-Saeed). I made a small setup, just enough, and started studying and crafting on it.
 
 That part has its own story, which you can read here:
-→ [My Early Setup Story](#)
+→ [My Early Setup Story](./../404.html)
 
 ---
 
@@ -44,7 +44,7 @@ Yeah, not in programming directly, and not exactly what I was aiming for yet. Bu
 
 ---
 
-When I got the online job in marketing, I didn’t even have internet in the apartment I was staying in. The connection I was borrowing from the place next door wasn’t stable, so I had to move my laptop, mouse, and keyboard (which also has its own story you can read here → [The Old Room Story](#)) to another place.
+When I got the online job in marketing, I didn’t even have internet in the apartment I was staying in. The connection I was borrowing from the place next door wasn’t stable, so I had to move my laptop, mouse, and keyboard (which also has its own story you can read here → [The Old Room Story](./../404.html)) to another place.
 
 At that time, I spent a period studying and working on an ironing table.
 
@@ -55,7 +55,7 @@ At that time, I spent a period studying and working on an ironing table.
 That phase was actually beautiful.
 
 My interest in low-level systems grew a lot. I started studying computer graphics and built this project:
-→ [Computer Graphics Project](#)
+→ [Computer Graphics Project](https://github.com/saeeedhany/tiny-but-shiny/tree/main/paint)
 
 I stayed in that phase for a while until, thankfully, I was finally able to get my own laptop.
 

@@ -45,24 +45,34 @@ permalink: /posts/
 
       <div class="posts-list">
         {% for post in cat_posts %}
+          {% assign searchable = post.title | append: " " | append: post.tags | join: " " | append: " " | append: post.excerpt | strip_html %}
+
           <a class="post-list-item"
              href="{{ post.url | relative_url }}"
-             data-searchable="{{ post.title }} {{ post.tags | join: ' ' }} {{ post.excerpt | strip_html }}">
+             data-searchable="{{ searchable | escape }}">
+
             <div class="post-list-item__date">
               {{ post.date | date: "%b %-d, %Y" }}
             </div>
+
             <div class="post-list-item__body">
               <div class="post-list-item__title">{{ post.title }}</div>
-              <div class="post-list-item__excerpt">{{ post.excerpt | strip_html | truncate: 120 }}</div>
+              <div class="post-list-item__excerpt">
+                {{ post.excerpt | strip_html | truncate: 120 }}
+              </div>
             </div>
+
             <div class="post-list-item__tags">
               {% for tag in post.tags limit: 2 %}
                 <span class="tag">{{ tag }}</span>
               {% endfor %}
               {% if post.read_time %}
-                <span class="post-card__read" style="align-self: center;">{{ post.read_time }}m</span>
+                <span class="post-card__read" style="align-self: center;">
+                  {{ post.read_time }}m
+                </span>
               {% endif %}
             </div>
+
           </a>
         {% endfor %}
       </div>
@@ -71,28 +81,37 @@ permalink: /posts/
   {% endfor %}
 
   <!-- Uncategorized -->
-  {% assign uncategorized = site.posts | where_exp: "post", "post.category == nil or post.category == ''" %}
+  {% assign uncategorized = site.posts | where: "category", nil %}
   {% if uncategorized.size > 0 %}
   <div class="category-group fade-up" data-category-group="misc" id="misc">
     <div class="category-group__label">
       Misc
       <span>{{ uncategorized.size }} post{% if uncategorized.size != 1 %}s{% endif %}</span>
     </div>
+
     <div class="posts-list">
       {% for post in uncategorized %}
         <a class="post-list-item"
            href="{{ post.url | relative_url }}"
-           data-searchable="{{ post.title }} {{ post.tags | join: ' ' }}">
-          <div class="post-list-item__date">{{ post.date | date: "%b %-d, %Y" }}</div>
+           data-searchable="{{ post.title | escape }} {{ post.tags | join: ' ' | escape }}">
+
+          <div class="post-list-item__date">
+            {{ post.date | date: "%b %-d, %Y" }}
+          </div>
+
           <div class="post-list-item__body">
             <div class="post-list-item__title">{{ post.title }}</div>
-            <div class="post-list-item__excerpt">{{ post.excerpt | strip_html | truncate: 120 }}</div>
+            <div class="post-list-item__excerpt">
+              {{ post.excerpt | strip_html | truncate: 120 }}
+            </div>
           </div>
+
           <div class="post-list-item__tags">
             {% for tag in post.tags limit: 2 %}
               <span class="tag">{{ tag }}</span>
             {% endfor %}
           </div>
+
         </a>
       {% endfor %}
     </div>
@@ -102,7 +121,9 @@ permalink: /posts/
   <!-- Empty state -->
   {% if site.posts.size == 0 %}
   <div style="text-align:center; padding: 5rem 0; color: var(--text-muted);">
-    <p style="font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.08em;">No posts yet.</p>
+    <p style="font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.08em;">
+      No posts yet.
+    </p>
   </div>
   {% endif %}
 

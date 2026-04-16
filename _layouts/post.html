@@ -1,0 +1,71 @@
+---
+layout: default
+---
+
+<div class="container container--narrow">
+  <header class="post-header fade-up">
+
+    <div class="post-header__meta">
+      <span class="tag">{{ page.category | default: page.categories[0] | capitalize }}</span>
+      {% for tag in page.tags %}
+        <span class="tag">{{ tag }}</span>
+      {% endfor %}
+    </div>
+
+    <h1 class="post-header__title">{{ page.title }}</h1>
+
+    {% if page.excerpt %}
+    <p class="post-header__excerpt">{{ page.excerpt | strip_html | truncate: 200 }}</p>
+    {% endif %}
+
+    <div class="post-header__byline">
+      <strong>{{ page.author | default: site.author.name }}</strong>
+      <span>—</span>
+      <time datetime="{{ page.date | date_to_xmlschema }}">
+        {{ page.date | date: "%B %-d, %Y" }}
+      </time>
+      {% if page.read_time %}
+        <span>— {{ page.read_time }} min read</span>
+      {% endif %}
+    </div>
+
+  </header>
+
+  <article class="post-content fade-up fade-up-2">
+    {{ content }}
+  </article>
+
+  <!-- Tags footer -->
+  {% if page.tags.size > 0 %}
+  <div style="margin-top: 2.5rem; padding-top: 1.75rem; border-top: 1px solid var(--border-subtle);">
+    <div class="post-card__tags">
+      {% for tag in page.tags %}
+        <span class="tag">{{ tag }}</span>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Prev / Next -->
+  <nav class="post-nav fade-up fade-up-3">
+    {% if page.previous.url %}
+    <a class="post-nav__item post-nav__item--prev" href="{{ page.previous.url | relative_url }}">
+      <div class="post-nav__label">Previous</div>
+      <div class="post-nav__title">{{ page.previous.title }}</div>
+    </a>
+    {% else %}
+    <div></div>
+    {% endif %}
+
+    {% if page.next.url %}
+    <a class="post-nav__item post-nav__item--next" href="{{ page.next.url | relative_url }}">
+      <div class="post-nav__label">Next</div>
+      <div class="post-nav__title">{{ page.next.title }}</div>
+    </a>
+    {% endif %}
+  </nav>
+
+</div>
+
+<!-- spacer -->
+<div style="height: 4rem;"></div>

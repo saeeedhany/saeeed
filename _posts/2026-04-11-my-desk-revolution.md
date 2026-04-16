@@ -116,7 +116,7 @@ And then…
 
 On 11/4/2026
 
-![My New Desk](/assets/images/New.png)
+![My New Desk](/assets/images/New.jpg)
 
 The new desk.
 

@@ -47,7 +47,7 @@ permalink: /posts/
         {% for post in cat_posts %}
           <a class="post-list-item"
              href="{{ post.url | relative_url }}"
-             data-searchable="{{ post.title }} {{ post.tags | join: ' ' }} {{ post.excerpt | strip_html }}">
+             data-searchable="{{ post.title | escape }} {{ post.tags | join: ' ' | escape }} {{ post.excerpt | strip_html | escape }}">
             <div class="post-list-item__date">
               {{ post.date | date: "%b %-d, %Y" }}
             </div>
@@ -82,7 +82,7 @@ permalink: /posts/
       {% for post in uncategorized %}
         <a class="post-list-item"
            href="{{ post.url | relative_url }}"
-           data-searchable="{{ post.title }} {{ post.tags | join: ' ' }}">
+           data-searchable="{{ post.title | escape }} {{ post.tags | join: ' ' | escape }}">
           <div class="post-list-item__date">{{ post.date | date: "%b %-d, %Y" }}</div>
           <div class="post-list-item__body">
             <div class="post-list-item__title">{{ post.title }}</div>

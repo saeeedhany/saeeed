@@ -4,8 +4,8 @@ description: "A personal blog on systems, software, and the tech that shapes how
 url: ""
 baseurl: ""
 author:
-  name: "Your Name"
-  handle: "@yourhandle"
+  name: "Saeed"
+  handle: "@Saeeedhany"
 
 # Build settings
 markdown: kramdown
@@ -34,7 +34,7 @@ defaults:
       type: "posts"
     values:
       layout: "post"
-      author: "Your Name"
+      author: "Saeed"
 
 # Exclude from build
 exclude:

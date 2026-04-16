@@ -38,10 +38,12 @@ defaults:
 
 # Exclude from build
 exclude:
-  - Gemfile
-  - Gemfile.lock
-  - README.md
-  - node_modules/
+    - vendor
+    - .bundle
+    - Gemfile
+    - Gemfile.lock
+    - README.md
+    - node_modules/
 
 # Categories (used for organization)
 categories_label:

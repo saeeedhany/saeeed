@@ -6,11 +6,14 @@ baseurl: ""
 author:
   name: "Saeed"
   handle: "@Saeeedhany"
+  github: "https://github.com/saeeedhany"
+  twitter: "https://twitter.com/Saeeedhany"
+  linkedin: "https://linkedin.com/in/saeeedhany"
 
 # Build settings
 markdown: kramdown
 highlighter: rouge
-permalink: /posts/:year/:month/:day/:title/
+permalink: /tech/:year/:month/:day/:title/
 
 # Plugins
 plugins:
@@ -18,17 +21,37 @@ plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
 
-# Pagination
-paginate: 10
-paginate_path: "/posts/page:num/"
-
 # Collections
 collections:
-  posts:
+  books:
     output: true
+    permalink: /books/:name/
+  personal:
+    output: true
+    permalink: /personal/:year/:month/:day/:title/
+  tech:
+    output: true
+    permalink: /tech/:year/:month/:day/:title/
 
 # Defaults
 defaults:
+  - scope:
+      path: ""
+      type: "books"
+    values:
+      layout: "book"
+  - scope:
+      path: ""
+      type: "personal"
+    values:
+      layout: "post"
+      author: "Saeed"
+  - scope:
+      path: ""
+      type: "tech"
+    values:
+      layout: "post"
+      author: "Saeed"
   - scope:
       path: ""
       type: "posts"
@@ -44,12 +67,3 @@ exclude:
     - Gemfile.lock
     - README.md
     - node_modules/
-
-# Categories (used for organization)
-categories_label:
-  systems: "Systems"
-  security: "Security"
-  ai: "Artificial Intelligence"
-  web: "Web Dev"
-  tools: "Tools & Workflow"
-  thoughts: "Thoughts"

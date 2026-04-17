@@ -3,163 +3,221 @@ layout: default
 title: Home
 ---
 
-{% assign pinned    = site.posts | where: "pinned", true %}
-{% assign recent    = site.posts | sort: "date" | reverse %}
-{% assign featured  = site.posts | where: "featured", true %}
-
 <!-- Hero -->
 <div class="container">
-    <section class="hero fade-up">
-        <p class="hero-eyebrow">signal/noise — tech writing</p>
-        <h1 class="hero-title">
-            Clear thoughts on<br><em>systems, code,</em><br>and what matters.
-        </h1>
-        <p class="hero-sub">
-        A personal space for long-form writing on software, security, tooling,
-        and the ideas shaping how we build things.
-        </p>
-    </section>
+  <section class="hero fade-up">
+    <p class="hero-eyebrow">signal/noise</p>
+    <h1 class="hero-title">
+      Clear thoughts on<br><em>systems, code,</em><br>and what matters.
+    </h1>
+    <p class="hero-sub">
+      A personal corner of the internet — book notes, life writing,
+      and things I find genuinely interesting in tech.
+    </p>
+    <div class="hero-cta">
+      <a href="{{ '/books/' | relative_url }}" class="cta-pill cta-pill--books">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" width="14" height="14">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
+        </svg>
+        Book shelf
+      </a>
+      <a href="{{ '/personal/' | relative_url }}" class="cta-pill cta-pill--personal">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" width="14" height="14">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"/>
+        </svg>
+        Personal
+      </a>
+      <a href="{{ '/tech/' | relative_url }}" class="cta-pill cta-pill--tech">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" width="14" height="14">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"/>
+        </svg>
+        Tech
+      </a>
+    </div>
+  </section>
 </div>
 
-<!-- Featured / Pinned Section -->
-{% if pinned.size > 0 or featured.size > 0 %}
+<!-- ═══ BOOKS ═══════════════════════════════════ -->
 <div class="container">
-    <section class="home-section fade-up fade-up-2">
-        <div class="home-section__header">
-            <h2 class="home-section__title">Featured</h2>
-            <a href="{{ '/posts/' | relative_url }}" class="view-all">All posts &rarr;</a>
-        </div>
+  <section class="home-section fade-up fade-up-2">
+    <div class="home-section__header">
+      <div class="home-section__label-group">
+        <span class="home-section__eyebrow books-accent">Reading Shelf</span>
+        <h2 class="home-section__title">Book Notes</h2>
+        <p class="home-section__desc">Books I've read and distilled into notes — each one links to topics, summaries, and the ideas worth keeping.</p>
+      </div>
+      <a href="{{ '/books/' | relative_url }}" class="view-all">All books &rarr;</a>
+    </div>
 
-        <div class="posts-grid posts-grid--featured">
-            {% for post in featured limit: 1 %}
-            <a class="post-card post-card--featured" href="{{ post.url | relative_url }}">
-                <div class="featured-badge">Featured</div>
-                <div class="post-card__meta">
-                    <span class="post-card__date">{{ post.date | date: "%b %-d, %Y" }}</span>
-                    {% if post.category %}
-                    <span class="tag">{{ post.category }}</span>
-                    {% endif %}
-                </div>
-                <h2 class="post-card__title">{{ post.title }}</h2>
-                <p class="post-card__excerpt">{{ post.excerpt | strip_html | truncate: 200 }}</p>
-                <div class="post-card__footer">
-                    <div class="post-card__tags">
-                        {% for tag in post.tags limit: 3 %}
-                        <span class="tag">{{ tag }}</span>
-                        {% endfor %}
-                    </div>
-                    {% if post.read_time %}
-                    <span class="post-card__read">{{ post.read_time }} min read</span>
-                    {% endif %}
-                </div>
-            </a>
-            {% endfor %}
-
-            {% for post in pinned limit: 2 %}
-            <a class="post-card" href="{{ post.url | relative_url }}">
-                <div class="post-card__meta">
-                    <svg class="pin-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
-                    </svg>
-                    <span class="post-card__date">{{ post.date | date: "%b %-d, %Y" }}</span>
-                    {% if post.category %}
-                    <span class="tag">{{ post.category }}</span>
-                    {% endif %}
-                </div>
-                <h3 class="post-card__title">{{ post.title }}</h3>
-                <p class="post-card__excerpt">{{ post.excerpt | strip_html | truncate: 150 }}</p>
-                <div class="post-card__footer">
-                    <div class="post-card__tags">
-                        {% for tag in post.tags limit: 2 %}
-                        <span class="tag">{{ tag }}</span>
-                        {% endfor %}
-                    </div>
-                </div>
-            </a>
-            {% endfor %}
+    <div class="books-home-grid">
+      {% assign recent_books = site.books | sort: "date" | reverse %}
+      {% for book in recent_books limit: 3 %}
+      <a class="book-home-card" href="{{ book.url | relative_url }}">
+        <div class="book-home-card__spine"></div>
+        <div class="book-home-card__cover">
+          {% if book.cover %}
+          <img src="{{ book.cover | relative_url }}" alt="{{ book.book_title | default: book.title }}">
+          {% else %}
+          <div class="book-home-card__cover-fallback">
+            <span>{{ book.book_title | default: book.title | truncate: 30, "" }}</span>
+          </div>
+          {% endif %}
         </div>
-    </section>
-</div>
-{% endif %}
-
-<!-- Recent Posts -->
-<div class="container">
-    <section class="home-section fade-up fade-up-3">
-        <div class="home-section__header">
-            <h2 class="home-section__title">Recent</h2>
-            <a href="{{ '/posts/' | relative_url }}" class="view-all">Browse all &rarr;</a>
+        <div class="book-home-card__info">
+          <p class="book-home-card__author">{{ book.book_author | default: "" }}</p>
+          <h3 class="book-home-card__title">{{ book.book_title | default: book.title }}</h3>
+          {% if book.description %}<p class="book-home-card__desc">{{ book.description | truncate: 80 }}</p>{% endif %}
         </div>
+      </a>
+      {% endfor %}
 
-        <div class="posts-grid posts-grid--2">
-            {% for post in recent limit: 4 %}
-            <a class="post-card" href="{{ post.url | relative_url }}">
-                <div class="post-card__meta">
-                    <span class="post-card__date">{{ post.date | date: "%b %-d, %Y" }}</span>
-                    {% if post.category %}
-                    <span class="tag">{{ post.category }}</span>
-                    {% endif %}
-                </div>
-                <h3 class="post-card__title">{{ post.title }}</h3>
-                <p class="post-card__excerpt">{{ post.excerpt | strip_html | truncate: 140 }}</p>
-                <div class="post-card__footer">
-                    <div class="post-card__tags">
-                        {% for tag in post.tags limit: 2 %}
-                        <span class="tag">{{ tag }}</span>
-                        {% endfor %}
-                    </div>
-                    {% if post.read_time %}
-                    <span class="post-card__read">{{ post.read_time }} min</span>
-                    {% endif %}
-                </div>
-            </a>
-            {% endfor %}
+      {% if site.books.size == 0 %}
+      <!-- Placeholder book cards -->
+      <a class="book-home-card" href="{{ '/books/' | relative_url }}">
+        <div class="book-home-card__spine"></div>
+        <div class="book-home-card__cover">
+          <div class="book-home-card__cover-fallback">
+            <span>Crafting Interpreters</span>
+          </div>
         </div>
-    </section>
+        <div class="book-home-card__info">
+          <p class="book-home-card__author">Robert Nystrom</p>
+          <h3 class="book-home-card__title">Crafting Interpreters</h3>
+          <p class="book-home-card__desc">Building a programming language from scratch, every step.</p>
+        </div>
+      </a>
+      <a class="book-home-card" href="{{ '/books/' | relative_url }}">
+        <div class="book-home-card__spine"></div>
+        <div class="book-home-card__cover">
+          <div class="book-home-card__cover-fallback" style="background: linear-gradient(160deg,#1a2035,#2a3a5e);">
+            <span>CS:APP</span>
+          </div>
+        </div>
+        <div class="book-home-card__info">
+          <p class="book-home-card__author">Bryant & O'Hallaron</p>
+          <h3 class="book-home-card__title">Computer Systems: A Programmer's Perspective</h3>
+          <p class="book-home-card__desc">How systems actually work — memory, processes, linking.</p>
+        </div>
+      </a>
+      <a class="book-home-card" href="{{ '/books/' | relative_url }}">
+        <div class="book-home-card__spine"></div>
+        <div class="book-home-card__cover">
+          <div class="book-home-card__cover-fallback" style="background: linear-gradient(160deg,#1c1a10,#3d3820);">
+            <span>The Linux Programming Interface</span>
+          </div>
+        </div>
+        <div class="book-home-card__info">
+          <p class="book-home-card__author">Michael Kerrisk</p>
+          <h3 class="book-home-card__title">The Linux Programming Interface</h3>
+          <p class="book-home-card__desc">The definitive guide to Linux and UNIX system programming.</p>
+        </div>
+      </a>
+      {% endif %}
+    </div>
+  </section>
 </div>
 
-<!-- Browse by Topic -->
-{% assign all_categories = site.posts | map: "category" | uniq | compact %}
-{% if all_categories.size > 0 %}
+<!-- ═══ PERSONAL ═════════════════════════════════ -->
 <div class="container">
-    <section class="home-section fade-up fade-up-4">
-        <div class="home-section__header">
-            <h2 class="home-section__title">By Topic</h2>
-        </div>
+  <section class="home-section fade-up fade-up-3">
+    <div class="home-section__header">
+      <div class="home-section__label-group">
+        <span class="home-section__eyebrow personal-accent">Personal</span>
+        <h2 class="home-section__title">Life & Thoughts</h2>
+        <p class="home-section__desc">Things I've lived and found worth writing — setups, growth, moments, and the quieter parts of the journey.</p>
+      </div>
+      <a href="{{ '/personal/' | relative_url }}" class="view-all">All personal &rarr;</a>
+    </div>
 
-        {% for category in all_categories %}
-        {% assign cat_posts = site.posts | where: "category", category | sort: "date" | reverse %}
-        {% if cat_posts.size > 0 %}
-        <div style="margin-bottom: 2.5rem;">
-            <div class="section-label">{{ category | capitalize }}</div>
-            <div class="posts-grid posts-grid--3">
-                {% for post in cat_posts limit: 3 %}
-                <a class="post-card" href="{{ post.url | relative_url }}">
-                    <div class="post-card__meta">
-                        <span class="post-card__date">{{ post.date | date: "%b %-d" }}</span>
-                    </div>
-                    <h3 class="post-card__title">{{ post.title }}</h3>
-                    <p class="post-card__excerpt">{{ post.excerpt | strip_html | truncate: 100 }}</p>
-                    <div class="post-card__footer">
-                        <div class="post-card__tags">
-                            {% for tag in post.tags limit: 1 %}
-                            <span class="tag">{{ tag }}</span>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
-            {% if cat_posts.size > 3 %}
-            <div style="margin-top: 0.75rem; text-align: right;">
-                <a href="{{ '/posts/#' | append: category | relative_url }}" class="view-all">
-                    +{{ cat_posts.size | minus: 3 }} more in {{ category | capitalize }} &rarr;
-                </a>
-            </div>
-            {% endif %}
-        </div>
+    <div class="posts-grid posts-grid--2">
+      {% assign personal_posts = site.personal | sort: "date" | reverse %}
+      {% for post in personal_posts limit: 2 %}
+      <a class="post-card post-card--personal" href="{{ post.url | relative_url }}">
+        {% if post.thumbnail %}
+        <div class="post-card__thumb"><img src="{{ post.thumbnail | relative_url }}" alt="{{ post.title }}"></div>
         {% endif %}
-        {% endfor %}
-    </section>
+        <div class="post-card__meta">
+          <span class="post-card__date">{{ post.date | date: "%b %-d, %Y" }}</span>
+        </div>
+        <h3 class="post-card__title">{{ post.title }}</h3>
+        <p class="post-card__excerpt">{{ post.excerpt | strip_html | truncate: 140 }}</p>
+        <div class="post-card__footer">
+          <div class="post-card__tags">{% for tag in post.tags limit: 2 %}<span class="tag">{{ tag }}</span>{% endfor %}</div>
+          {% if post.read_time %}<span class="post-card__read">{{ post.read_time }} min</span>{% endif %}
+        </div>
+      </a>
+      {% endfor %}
+
+      {% if site.personal.size == 0 %}
+      {% assign legacy_personal = site.posts | where: "category", "me" %}
+      {% for post in legacy_personal limit: 2 %}
+      <a class="post-card post-card--personal" href="{{ post.url | relative_url }}">
+        {% if post.thumbnail %}<div class="post-card__thumb"><img src="{{ post.thumbnail | relative_url }}" alt="{{ post.title }}"></div>{% endif %}
+        <div class="post-card__meta">
+          <span class="post-card__date">{{ post.date | date: "%b %-d, %Y" }}</span>
+        </div>
+        <h3 class="post-card__title">{{ post.title }}</h3>
+        <p class="post-card__excerpt">{{ post.excerpt | strip_html | truncate: 140 }}</p>
+        <div class="post-card__footer">
+          <div class="post-card__tags">{% for tag in post.tags limit: 2 %}<span class="tag">{{ tag }}</span>{% endfor %}</div>
+          {% if post.read_time %}<span class="post-card__read">{{ post.read_time }} min</span>{% endif %}
+        </div>
+      </a>
+      {% endfor %}
+      {% endif %}
+    </div>
+  </section>
 </div>
-{% endif %}
+
+<!-- ═══ TECH ══════════════════════════════════════ -->
+<div class="container">
+  <section class="home-section fade-up fade-up-4">
+    <div class="home-section__header">
+      <div class="home-section__label-group">
+        <span class="home-section__eyebrow tech-accent">Tech</span>
+        <h2 class="home-section__title">Interesting in Tech</h2>
+        <p class="home-section__desc">Things I find genuinely interesting — systems, security, tooling, and the craft of building software.</p>
+      </div>
+      <a href="{{ '/tech/' | relative_url }}" class="view-all">All tech &rarr;</a>
+    </div>
+
+    <div class="posts-grid posts-grid--3">
+      {% assign tech_posts = site.tech | sort: "date" | reverse %}
+      {% for post in tech_posts limit: 3 %}
+      <a class="post-card post-card--tech" href="{{ post.url | relative_url }}">
+        {% if post.thumbnail %}<div class="post-card__thumb"><img src="{{ post.thumbnail | relative_url }}" alt="{{ post.title }}"></div>{% endif %}
+        <div class="post-card__meta">
+          <span class="post-card__date">{{ post.date | date: "%b %-d, %Y" }}</span>
+          {% if post.category %}<span class="tag">{{ post.category }}</span>{% endif %}
+        </div>
+        <h3 class="post-card__title">{{ post.title }}</h3>
+        <p class="post-card__excerpt">{{ post.excerpt | strip_html | truncate: 110 }}</p>
+        <div class="post-card__footer">
+          <div class="post-card__tags">{% for tag in post.tags limit: 2 %}<span class="tag">{{ tag }}</span>{% endfor %}</div>
+        </div>
+      </a>
+      {% endfor %}
+
+      {% if site.tech.size == 0 %}
+      <!-- Placeholder cards -->
+      {% assign all_tech = site.posts | where_exp: "p", "p.category != 'me'" %}
+      {% for post in all_tech limit: 3 %}
+      <a class="post-card post-card--tech" href="{{ post.url | relative_url }}">
+        {% if post.thumbnail %}<div class="post-card__thumb"><img src="{{ post.thumbnail | relative_url }}" alt="{{ post.title }}"></div>{% endif %}
+        <div class="post-card__meta">
+          <span class="post-card__date">{{ post.date | date: "%b %-d, %Y" }}</span>
+          {% if post.category %}<span class="tag">{{ post.category }}</span>{% endif %}
+        </div>
+        <h3 class="post-card__title">{{ post.title }}</h3>
+        <p class="post-card__excerpt">{{ post.excerpt | strip_html | truncate: 110 }}</p>
+        <div class="post-card__footer">
+          <div class="post-card__tags">{% for tag in post.tags limit: 2 %}<span class="tag">{{ tag }}</span>{% endfor %}</div>
+        </div>
+      </a>
+      {% endfor %}
+      {% endif %}
+    </div>
+  </section>
+</div>
+
+<div style="height: 4rem;"></div>

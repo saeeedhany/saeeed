@@ -1,0 +1,128 @@
+---
+layout: default
+title: Book Notes
+permalink: /books/
+---
+
+<div class="container">
+  <header class="section-header fade-up">
+    <div class="section-label">Reading shelf</div>
+    <h1 class="section-header__title">Book Notes</h1>
+    <p class="section-header__sub">
+      Books I've read, studied, and distilled — each card links to my notes, summaries, and the ideas I actually kept.
+    </p>
+  </header>
+
+  <div class="books-grid fade-up fade-up-2">
+
+    {% for book in site.books %}
+    <a class="book-card" href="{{ book.url | relative_url }}">
+      <div class="book-card__cover">
+        {% if book.cover %}
+          <img src="{{ book.cover | relative_url }}" alt="{{ book.book_title | default: book.title }}">
+        {% else %}
+          <div class="book-card__cover-placeholder">
+            <span>{{ book.book_title | default: book.title | truncate: 40, "" }}</span>
+          </div>
+        {% endif %}
+      </div>
+      <div class="book-card__body">
+        <p class="book-card__author">{{ book.book_author | default: "Unknown" }}</p>
+        <h3 class="book-card__title">{{ book.book_title | default: book.title }}</h3>
+        {% if book.description %}
+        <p class="book-card__desc">{{ book.description | truncate: 100 }}</p>
+        {% endif %}
+        <div class="book-card__footer">
+          {% if book.rating %}
+          <span class="book-rating book-rating--sm">{% for i in (1..book.rating) %}★{% endfor %}</span>
+          {% endif %}
+          {% if book.tags %}
+          <div class="post-card__tags">
+            {% for tag in book.tags limit: 2 %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </a>
+    {% endfor %}
+
+    <!-- MOCKUP CARDS — remove when you add real books -->
+    {% if site.books.size == 0 %}
+
+    <div class="book-card book-card--placeholder">
+      <div class="book-card__cover">
+        <div class="book-card__cover-placeholder">
+          <span>Crafting Interpreters</span>
+        </div>
+      </div>
+      <div class="book-card__body">
+        <p class="book-card__author">Robert Nystrom</p>
+        <h3 class="book-card__title">Crafting Interpreters</h3>
+        <p class="book-card__desc">A complete guide to building a programming language from scratch — lexing, parsing, and evaluation.</p>
+        <div class="book-card__footer">
+          <span class="book-rating book-rating--sm">★★★★★</span>
+          <span class="tag">compilers</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="book-card book-card--placeholder">
+      <div class="book-card__cover">
+        <div class="book-card__cover-placeholder" style="background: linear-gradient(135deg, #1a1f2e 0%, #2d3748 100%);">
+          <span>Computer Systems</span>
+        </div>
+      </div>
+      <div class="book-card__body">
+        <p class="book-card__author">Bryant & O'Hallaron</p>
+        <h3 class="book-card__title">CS:APP</h3>
+        <p class="book-card__desc">A programmer's perspective on how computer systems work — memory, processes, networking.</p>
+        <div class="book-card__footer">
+          <span class="book-rating book-rating--sm">★★★★★</span>
+          <span class="tag">systems</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="book-card book-card--placeholder">
+      <div class="book-card__cover">
+        <div class="book-card__cover-placeholder" style="background: linear-gradient(135deg, #1c1a0f 0%, #3d3420 100%);">
+          <span>The Linux Programming Interface</span>
+        </div>
+      </div>
+      <div class="book-card__body">
+        <p class="book-card__author">Michael Kerrisk</p>
+        <h3 class="book-card__title">The Linux Programming Interface</h3>
+        <p class="book-card__desc">The definitive guide to Linux and UNIX system programming.</p>
+        <div class="book-card__footer">
+          <span class="book-rating book-rating--sm">★★★★</span>
+          <span class="tag">linux</span>
+          <span class="tag">systems</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="book-card book-card--placeholder">
+      <div class="book-card__cover">
+        <div class="book-card__cover-placeholder" style="background: linear-gradient(135deg, #0d1f1a 0%, #1a3d30 100%);">
+          <span>The Art of Doing Science</span>
+        </div>
+      </div>
+      <div class="book-card__body">
+        <p class="book-card__author">Richard Hamming</p>
+        <h3 class="book-card__title">The Art of Doing Science and Engineering</h3>
+        <p class="book-card__desc">How to think about problems that matter and build things that last.</p>
+        <div class="book-card__footer">
+          <span class="book-rating book-rating--sm">★★★★★</span>
+          <span class="tag">thinking</span>
+        </div>
+      </div>
+    </div>
+
+    {% endif %}
+
+  </div>
+
+  <div style="height: 5rem;"></div>
+</div>

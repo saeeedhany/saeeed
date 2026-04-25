@@ -1,0 +1,220 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const enPosts = await getCollection('en', ({ data }) => !data.draft);
+const arPosts = await getCollection('ar', ({ data }) => !data.draft);
+
+const enSorted = enPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const arSorted = arPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+// Only English tags for the tag filter
+const enTags = [...new Set(enPosts.flatMap(p => p.data.tags))].sort();
+
+function fmtEn(date: Date) {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+}
+function fmtAr(date: Date) {
+  return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short' });
+}
+---
+
+<Base title="Writing — ysm.dev">
+  <div class="container">
+
+    <div class="section-label" style="margin-bottom: 32px;">Writing</div>
+
+    <!-- ── Lang switcher ── -->
+    <div class="lang-switcher">
+      <button class="lang-btn active" data-lang="en">English</button>
+      <button class="lang-btn" data-lang="ar">العربية</button>
+    </div>
+
+    <!-- ── ENGLISH SECTION ── -->
+    <section id="section-en" class="lang-section">
+
+      <!-- Tag filter — only for EN -->
+      <div class="tag-filter" id="tag-filter">
+        <button class="tag-btn active" data-tag="all">All</button>
+        {enTags.map(tag => (
+          <button class="tag-btn" data-tag={tag}>{tag}</button>
+        ))}
+      </div>
+
+      <ul class="posts-list" id="en-posts">
+        {enSorted.map(post => (
+          <li class="post-item" data-tags={post.data.tags.join(',')}>
+            <a href={`/posts/en/${post.slug}`} class="post-link">
+              <span class="post-title">{post.data.title}</span>
+              <span class="post-meta">
+                {post.data.tags.slice(0, 2).map(tag => (
+                  <span class="post-tag">{tag}</span>
+                ))}
+                <span class="post-date">{fmtEn(post.data.date)}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <div id="en-empty" class="empty-state" style="display:none;">
+        <p>No posts found.</p>
+      </div>
+    </section>
+
+    <!-- ── ARABIC SECTION ── -->
+    <section id="section-ar" class="lang-section" style="display:none;" dir="rtl">
+      <ul class="posts-list">
+        {arSorted.map(post => (
+          <li class="post-item">
+            <a href={`/posts/ar/${post.slug}`} class="post-link">
+              <span class="post-title post-title-ar">{post.data.title}</span>
+              <span class="post-meta" style="flex-direction:row-reverse;">
+                {post.data.tags.slice(0, 2).map(tag => (
+                  <span class="post-tag">{tag}</span>
+                ))}
+                <span class="post-date">{fmtAr(post.data.date)}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+
+  </div>
+</Base>
+
+<style>
+.lang-switcher {
+  display: flex;
+  gap: 0;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.lang-btn {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  padding: 8px 20px 10px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-bottom: -1px;
+}
+
+.lang-btn:hover {
+  color: var(--cream);
+}
+
+.lang-btn.active {
+  color: var(--cream);
+  border-bottom-color: var(--blue);
+}
+
+.lang-btn[data-lang="ar"] {
+  font-family: var(--font-ar);
+  font-size: 0.85rem;
+}
+
+.lang-btn[data-lang="ar"].active {
+  border-bottom-color: var(--amber);
+}
+
+.tag-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+
+.tag-btn {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.tag-btn:hover {
+  border-color: var(--cream);
+  color: var(--cream);
+}
+
+.tag-btn.active {
+  border-color: var(--blue);
+  color: var(--blue);
+  background: rgba(58, 143, 196, 0.06);
+}
+
+.empty-state p {
+  color: var(--muted);
+  font-size: 0.8rem;
+  padding: 40px 0;
+}
+</style>
+
+<script>
+// Lang tabs
+const langBtns = document.querySelectorAll<HTMLButtonElement>('.lang-btn');
+const sectionEn = document.getElementById('section-en')!;
+const sectionAr = document.getElementById('section-ar')!;
+const tagFilter = document.getElementById('tag-filter')!;
+
+langBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    langBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const lang = btn.dataset.lang;
+    if (lang === 'en') {
+      sectionEn.style.display = '';
+      sectionAr.style.display = 'none';
+      tagFilter.style.display = '';
+    } else {
+      sectionEn.style.display = 'none';
+      sectionAr.style.display = '';
+      tagFilter.style.display = 'none';
+    }
+  });
+});
+
+// Tag filter (EN only)
+const tagBtns = document.querySelectorAll<HTMLButtonElement>('.tag-btn');
+const enItems = document.querySelectorAll<HTMLElement>('#en-posts .post-item');
+const enEmpty = document.getElementById('en-empty')!;
+
+tagBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    tagBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const tag = btn.dataset.tag || 'all';
+    let visible = 0;
+
+    enItems.forEach(item => {
+      const tags = (item.dataset.tags || '').split(',');
+      const show = tag === 'all' || tags.includes(tag);
+      item.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    enEmpty.style.display = visible === 0 ? 'block' : 'none';
+  });
+});
+
+// URL param ?lang=
+const params = new URLSearchParams(window.location.search);
+const langParam = params.get('lang');
+if (langParam === 'ar') {
+  document.querySelector<HTMLButtonElement>('[data-lang="ar"]')?.click();
+}
+</script>

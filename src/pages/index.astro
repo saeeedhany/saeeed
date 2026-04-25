@@ -1,0 +1,132 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const enPosts = await getCollection('en', ({ data }) => !data.draft);
+const arPosts = await getCollection('ar', ({ data }) => !data.draft);
+
+const enSorted = enPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 5);
+const arSorted = arPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 5);
+
+function fmtEn(date: Date) {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+}
+function fmtAr(date: Date) {
+  return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short' });
+}
+---
+
+<Base>
+  <!-- Hero image -->
+  <div class="hero-wrapper">
+    <img
+      src="/cover.png"
+      alt="Saeed — ysm.dev"
+      class="hero-image"
+    />
+  </div>
+
+  <div class="container">
+    <!-- Bio -->
+    <section class="bio">
+      <img src="/avatar.jpg" alt="Saeed" class="bio-avatar" onerror="this.style.display='none'" />
+      <div class="bio-name">Saeed / dev</div>
+      <p class="bio-text">
+        I build systems, CLI tools, and low-level stuff. <br>
+        Interested in operating systems,computer architecture, C, and simple web.<br /><br />
+        Currently working on <a href="https://github.com/Abserny" class="link-underline">Abserny</a>,{' '}
+        <a href="https://github.com/DDumbying" class="link-underline">;DD</a>, and some web stuff like{' '}
+                <a href="https://saeeedhany.github.io/Xnote/" class="link-underline">Xnote</a>, and{' '}
+                <a href="https://github.com/saeeedhany?tab=repositories" class="link-underline">Others</a>.<br /><br />
+        Find me on{' '}
+        <a href="https://github.com/saeeedhany" target="_blank" rel="noopener" class="link-underline">GitHub</a>,{' '}
+        <a href="https://x.com/S8eed_" target="_blank" rel="noopener" class="link-underline">𝕏</a>,{' '}
+        or <a href="mailto:alsaeedalbasi0ny@gmail.com" class="link-underline">say hi</a>.
+      </p>
+    </section>
+
+    <!-- English posts -->
+    {enSorted.length > 0 && (
+      <section class="lang-block">
+        <div class="section-label">Writing / English</div>
+        <ul class="posts-list">
+          {enSorted.map(post => (
+            <li class="post-item">
+              <a href={`/posts/en/${post.slug}`} class="post-link">
+                <span class="post-title">{post.data.title}</span>
+                <span class="post-meta">
+                  {post.data.tags.slice(0, 1).map(tag => (
+                    <span class="post-tag">{tag}</span>
+                  ))}
+                  <span class="post-date">{fmtEn(post.data.date)}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <a href="/posts" class="more-link link-underline">all posts →</a>
+      </section>
+    )}
+
+    <!-- Arabic posts -->
+    {arSorted.length > 0 && (
+      <section class="lang-block ar-block" dir="rtl">
+        <div class="section-label ar-label">كتابات / عربي</div>
+        <ul class="posts-list">
+          {arSorted.map(post => (
+            <li class="post-item">
+              <a href={`/posts/ar/${post.slug}`} class="post-link">
+                <span class="post-title post-title-ar">{post.data.title}</span>
+                <span class="post-meta">
+                  {post.data.tags.slice(0, 1).map(tag => (
+                    <span class="post-tag">{tag}</span>
+                  ))}
+                  <span class="post-date">{fmtAr(post.data.date)}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <a href="/posts?lang=ar" class="more-link link-underline">كل المقالات →</a>
+      </section>
+    )}
+  </div>
+</Base>
+
+<style>
+.more-link {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  transition: color var(--transition);
+}
+.more-link:hover {
+  color: var(--blue);
+}
+
+/* Arabic section: fully right-aligned */
+.ar-block {
+  text-align: right;
+}
+
+.ar-label {
+  flex-direction: row-reverse;
+}
+
+.ar-label::after {
+  /* put the line on the right side */
+  order: -1;
+  margin-right: 0;
+  margin-left: 10px;
+}
+
+.ar-block .post-link {
+  direction: rtl;
+}
+
+.ar-block .post-meta {
+  flex-direction: row-reverse;
+}
+</style>

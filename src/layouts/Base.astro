@@ -1,0 +1,56 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Saeed - The one who knocks',
+  description = 'Systems, CLI tools, low-level stuff. Writing about operating systems, architecture, C, and the web.',
+} = Astro.props;
+
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <div class="nav-inner">
+          <a href="/" class="nav-logo">Saeed</a>
+          <ul class="nav-links">
+            <li><a href="/" class={currentPath === '/' ? 'active' : ''}>home</a></li>
+            <li><a href="/posts" class={currentPath.startsWith('/posts') ? 'active' : ''}>writing</a></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <slot />
+
+    <div class="container">
+      <footer>
+        <div class="footer-inner">
+          <span>© {new Date().getFullYear()} Saeed</span>
+          <div class="footer-links">
+            <a href="https://github.com/saeeedhany" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://x.com/S8eed_" target="_blank" rel="noopener">𝕏</a>
+            <a href="mailto:alsaeedalbasi0ny@gmail.com">say hi</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

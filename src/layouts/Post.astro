@@ -22,144 +22,144 @@ const isAr = lang === 'ar';
 
 <Base title={`${title} — ysm.dev`} description={description}>
 
-  <!-- TOC: absolutely outside the content column -->
-  <aside class={`toc ${isAr ? 'toc--rtl' : ''}`} id="toc">
-    <div class="toc-label">{isAr ? 'المحتويات' : 'Contents'}</div>
-    <ul class="toc-list" id="toc-list"></ul>
-  </aside>
+    <!-- TOC: absolutely outside the content column -->
+    <aside class={`toc ${isAr ? 'toc--rtl' : ''}`} id="toc">
+        <div class="toc-label">{isAr ? 'المحتويات' : 'Contents'}</div>
+        <ul class="toc-list" id="toc-list"></ul>
+    </aside>
 
-  <!-- Content: uses the normal centered container, full width -->
-  <div class="container" dir={isAr ? 'rtl' : 'ltr'}>
-    <article>
-      <header class="post-header">
-        <div class="post-header-lang">{isAr ? 'عربي' : 'English'}</div>
-        <h1 class={`post-header-title ${isAr ? 'ar' : ''}`}>{title}</h1>
-        <div class="post-header-meta">
-          <time>{formattedDate}</time>
-          {tags.map(tag => (
-            <span class="post-tag">{tag}</span>
-          ))}
-        </div>
-      </header>
+    <!-- Content: uses the normal centered container, full width -->
+    <div class="container" dir={isAr ? 'rtl' : 'ltr'}>
+        <article>
+            <header class="post-header">
+                <div class="post-header-lang">{isAr ? 'عربي' : 'English'}</div>
+                <h1 class={`post-header-title ${isAr ? 'ar' : ''}`}>{title}</h1>
+                <div class="post-header-meta">
+                    <time>{formattedDate}</time>
+                    {tags.map(tag => (
+                    <span class="post-tag">{tag}</span>
+                    ))}
+                </div>
+            </header>
 
-      {cover && (
-        <img src={cover} alt={title} class="post-cover" loading="lazy" />
-      )}
+            {cover && (
+            <img src={cover} alt={title} class="post-cover" loading="lazy" />
+            )}
 
-      <div class={`prose ${isAr ? 'ar' : ''}`}>
-        <slot />
-      </div>
-    </article>
-  </div>
+            <div class={`prose ${isAr ? 'ar' : ''}`}>
+                <slot />
+            </div>
+        </article>
+    </div>
 
 </Base>
 
 <style>
 /* TOC floats to the left of the viewport, outside the content column */
 .toc {
-  position: fixed;
-  top: 120px;
-  /* Place it just to the left of where the container starts.
-     Container max-width is 700px, so it starts at (50vw - 350px).
-     We sit 24px gap to the left of that. */
-  right: calc(50% + 350px + 32px);
-  width: 160px;
-  max-height: calc(100vh - 160px);
-  overflow-y: hidden;
+    position: fixed;
+    top: 120px;
+    /* Place it just to the left of where the container starts.
+Container max-width is 700px, so it starts at (50vw - 350px).
+We sit 24px gap to the left of that. */
+    right: calc(50% + 350px + 32px);
+    width: 160px;
+    max-height: calc(100vh - 160px);
+    overflow-y: hidden;
 }
 
 /* For Arabic posts, TOC goes to the right side */
 .toc--rtl {
-  right: auto;
-  left: calc(50% + 350px + 32px);
+    right: auto;
+    left: calc(50% + 350px + 32px);
 }
 
 .toc-label {
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 14px;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
 }
 
 .toc-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  border-left: 1px solid var(--border);
-  padding-left: 14px;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-left: 1px solid var(--border);
+    padding-left: 14px;
 }
 
 .toc--rtl .toc-list {
-  border-left: none;
-  border-right: 1px solid var(--border);
-  padding-left: 0;
-  padding-right: 14px;
+    border-left: none;
+    border-right: 1px solid var(--border);
+    padding-left: 0;
+    padding-right: 14px;
 }
 
 .toc-item a {
-  font-size: 0.7rem;
-  color: var(--muted);
-  transition: color var(--transition);
-  line-height: 1.5;
-  display: block;
+    font-size: 0.7rem;
+    color: var(--muted);
+    transition: color var(--transition);
+    line-height: 1.5;
+    display: block;
 }
 
 .toc-item a:hover,
 .toc-item a.active {
-  color: var(--blue);
+    color: var(--blue);
 }
 
 .toc-item--h3 {
-  padding-left: 10px;
+    padding-left: 10px;
 }
 
 /* Hide TOC when viewport is not wide enough to show it outside */
 @media (max-width: 1120px) {
-  .toc {
-    display: none;
-  }
+    .toc {
+        display: none;
+    }
 }
 </style>
 
 <script>
 function buildTOC() {
-  const article = document.querySelector('article');
-  const tocList = document.getElementById('toc-list');
-  if (!article || !tocList) return;
+const article = document.querySelector('article');
+const tocList = document.getElementById('toc-list');
+if (!article || !tocList) return;
 
-  const headings = article.querySelectorAll('h2, h3');
-  if (headings.length === 0) {
-    document.getElementById('toc')?.remove();
-    return;
-  }
+const headings = article.querySelectorAll('h2, h3');
+if (headings.length === 0) {
+document.getElementById('toc')?.remove();
+return;
+}
 
-  headings.forEach((heading, i) => {
-    if (!heading.id) heading.id = `h-${i}`;
-    const li = document.createElement('li');
-    li.className = `toc-item${heading.tagName === 'H3' ? ' toc-item--h3' : ''}`;
-    const a = document.createElement('a');
-    a.href = `#${heading.id}`;
-    a.textContent = heading.textContent || '';
-    li.appendChild(a);
-    tocList.appendChild(li);
-  });
+headings.forEach((heading, i) => {
+if (!heading.id) heading.id = `h-${i}`;
+const li = document.createElement('li');
+li.className = `toc-item${heading.tagName === 'H3' ? ' toc-item--h3' : ''}`;
+const a = document.createElement('a');
+a.href = `#${heading.id}`;
+a.textContent = heading.textContent || '';
+li.appendChild(a);
+tocList.appendChild(li);
+});
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        const link = tocList.querySelector(`a[href="#${entry.target.id}"]`);
-        if (entry.isIntersecting) {
-          tocList.querySelectorAll('a').forEach(a => a.classList.remove('active'));
-          link?.classList.add('active');
-        }
-      });
-    },
-    { rootMargin: '-20% 0px -70% 0px' }
-  );
+const observer = new IntersectionObserver(
+(entries) => {
+entries.forEach(entry => {
+const link = tocList.querySelector(`a[href="#${entry.target.id}"]`);
+if (entry.isIntersecting) {
+tocList.querySelectorAll('a').forEach(a => a.classList.remove('active'));
+link?.classList.add('active');
+}
+});
+},
+{ rootMargin: '-20% 0px -70% 0px' }
+);
 
-  headings.forEach(h => observer.observe(h));
+headings.forEach(h => observer.observe(h));
 }
 
 buildTOC();

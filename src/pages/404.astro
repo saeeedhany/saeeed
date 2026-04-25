@@ -2,68 +2,68 @@
 import Base from '../layouts/Base.astro';
 ---
 
-<Base title="404 — ysm.dev">
-  <div class="container">
-    <div class="not-found">
-      <div class="not-found-code">
-        <span class="prompt">~/</span> cd <span class="arg">this-page</span>
-        <br />
-        <span class="error">bash: this-page: No such file or directory</span>
-      </div>
-      <h1 class="not-found-title">404</h1>
-      <p class="not-found-sub">This page doesn't exist.</p>
-      <a href="/" class="not-found-link link-underline">← go home</a>
+<Base title="404 - Saeed">
+    <div class="container">
+        <div class="not-found">
+            <div class="not-found-code">
+                <span class="prompt">~/</span> cd <span class="arg">this-page</span>
+                <br />
+                <span class="error">bash: this-page: No such file or directory</span>
+            </div>
+            <h1 class="not-found-title">404</h1>
+            <p class="not-found-sub">This page doesn't exist.</p>
+            <a href="/" class="not-found-link link-underline">← go home</a>
+        </div>
     </div>
-  </div>
 </Base>
 
 <style>
 .not-found {
-  padding: 80px 0 120px;
+    padding: 80px 0 120px;
 }
 
 .not-found-code {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  line-height: 1.8;
-  margin-bottom: 48px;
-  color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.8;
+    margin-bottom: 48px;
+    color: var(--muted);
 }
 
 .prompt {
-  color: var(--phosphor);
+    color: var(--phosphor);
 }
 
 .arg {
-  color: var(--blue);
+    color: var(--blue);
 }
 
 .error {
-  color: var(--orange);
+    color: var(--orange);
 }
 
 .not-found-title {
-  font-size: 6rem;
-  font-weight: 500;
-  color: var(--border);
-  letter-spacing: -0.04em;
-  line-height: 1;
-  margin-bottom: 16px;
+    font-size: 6rem;
+    font-weight: 500;
+    color: var(--border);
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 16px;
 }
 
 .not-found-sub {
-  font-size: 0.85rem;
-  color: var(--muted);
-  margin-bottom: 32px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 32px;
 }
 
 .not-found-link {
-  font-size: 0.78rem;
-  color: var(--muted);
-  transition: color var(--transition);
+    font-size: 0.78rem;
+    color: var(--muted);
+    transition: color var(--transition);
 }
 
 .not-found-link:hover {
-  color: var(--blue);
+    color: var(--blue);
 }
 </style>

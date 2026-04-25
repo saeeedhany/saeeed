@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Sans+Arabic:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Sans+Arabic:wght@300;400;500&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root {
   --bg:         #0f0e0d;
@@ -140,6 +140,7 @@ nav {
   color: var(--cream);
 }
 
+/* ── Hero ── */
 .hero-wrapper {
   width: 100%;
   background: #000;
@@ -149,6 +150,7 @@ nav {
   margin-bottom: 64px;
   border-bottom: 1px solid var(--border);
   overflow: hidden;
+  position: relative;
 }
 
 .hero-image {
@@ -159,8 +161,50 @@ nav {
   object-fit: contain;
   object-position: center center;
   filter: saturate(0.95) contrast(1.02);
+  position: relative;
+  z-index: 1;
 }
 
+/* Arabic text layer behind the statue */
+.hero-text-bg {
+  position: absolute;
+  inset: 0;
+  padding: 28px 48px;
+  overflow: hidden;
+
+  font-family: 'Amiri', serif;
+  font-size: clamp(0.95rem, 1.3vw, 1.4rem);
+  line-height: 2.1;
+  direction: rtl;
+  text-align: justify;
+  word-break: break-word;
+
+  color: rgba(200, 169, 74, 0.52);
+  letter-spacing: 0.02em;
+
+  mask-image:
+    radial-gradient(ellipse 42% 55% at 50% 45%,
+      transparent 0%,
+      transparent 25%,
+      rgba(0,0,0,0.3) 45%,
+      black 70%),
+    linear-gradient(to bottom, black 55%, transparent 95%);
+  -webkit-mask-image:
+    radial-gradient(ellipse 42% 55% at 50% 45%,
+      transparent 0%,
+      transparent 25%,
+      rgba(0,0,0,0.3) 45%,
+      black 70%),
+    linear-gradient(to bottom, black 55%, transparent 95%);
+  mask-composite: intersect;
+  -webkit-mask-composite: destination-in;
+
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+/* ── Bio section ── */
 .bio {
   margin-bottom: 72px;
 }
@@ -512,6 +556,14 @@ nav {
   margin: 40px 0;
 }
 
+.prose img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 24px 0;
+  border: 1px solid var(--border);
+}
+
 footer {
   margin-top: 120px;
   padding: 32px 0 40px;
@@ -556,8 +608,14 @@ footer {
   .hero-wrapper {
     margin-bottom: 40px;
   }
+
   .hero-image {
     max-height: 300px;
+  }
+
+  .hero-text-bg {
+    font-size: 0.9rem;
+    padding: 20px 24px;
   }
 
   .post-link {

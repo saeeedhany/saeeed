@@ -3,7 +3,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://ysm.dev',
+  site: 'https://saeeed.vercel.app',
   integrations: [mdx(), sitemap()],
   markdown: {
     shikiConfig: {

@@ -181,27 +181,19 @@ body > nav + * {
 /* Theme toggle button */
 .theme-toggle {
     background: none;
-    border: none;
+    border: 1px solid var(--border);
     cursor: pointer;
     color: var(--muted);
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     font-family: var(--font-mono);
-    letter-spacing: 0.06em;
-    padding: 0;
-    transition: color var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    letter-spacing: 0.08em;
+    padding: 3px 10px;
+    transition: color var(--transition), border-color var(--transition);
 }
 
 .theme-toggle:hover {
     color: var(--cream);
-}
-
-.theme-toggle-icon {
-    width: 14px;
-    height: 14px;
-    display: block;
+    border-color: var(--muted);
 }
 
 /* Hamburger */

@@ -43,7 +43,7 @@ if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
                         <li><a href="/posts" class={currentPath.startsWith('/posts') ? 'active' : ''}>writing</a></li>
                         <li>
                             <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-                                <span id="theme-icon">○</span>
+                                <span id="theme-icon">light</span>
                             </button>
                         </li>
                     </ul>
@@ -95,8 +95,8 @@ const toggleBtn = document.getElementById('theme-toggle');
 const toggleMobile = document.getElementById('theme-toggle-mobile');
 const themeIcon = document.getElementById('theme-icon');
 
-const MOON = '○';
-const SUN = '●';
+const MOON = 'light';
+const SUN = 'dark';
 
 function getTheme() {
   return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';

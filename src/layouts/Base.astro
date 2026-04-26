@@ -2,13 +2,13 @@
 import '../styles/global.css';
 
 interface Props {
-  title?: string;
-  description?: string;
+title?: string;
+description?: string;
 }
 
 const {
-  title = 'Saeed - The one who knocks',
-  description = 'Systems, CLI tools, low-level stuff. Writing about operating systems, architecture, C, and the web.',
+title = 'Saeed — ysm.dev',
+description = 'Systems, CLI tools, low-level stuff. Writing about operating systems, architecture, C, and the web.',
 } = Astro.props;
 
 const currentPath = Astro.url.pathname;
@@ -24,18 +24,50 @@ const currentPath = Astro.url.pathname;
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <!-- Apply saved theme before paint to avoid flash -->
+        <script is:inline>
+        (function() {
+const t = localStorage.getItem('theme');
+if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+})();
+</script>
     </head>
     <body>
-        <div class="container">
-            <nav>
+        <nav id="main-nav">
+            <div class="container">
                 <div class="nav-inner">
-                    <a href="/" class="nav-logo">Saeed</a>
+                    <a href="/" class="nav-logo">ysm<span>.</span>dev</a>
+
                     <ul class="nav-links">
                         <li><a href="/" class={currentPath === '/' ? 'active' : ''}>home</a></li>
                         <li><a href="/posts" class={currentPath.startsWith('/posts') ? 'active' : ''}>writing</a></li>
+                        <li>
+                            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                                <span id="theme-icon">○</span>
+                            </button>
+                        </li>
                     </ul>
+
+                    <!-- Hamburger (mobile only) -->
+                    <button class="nav-hamburger" id="hamburger" aria-label="Menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
                 </div>
-            </nav>
+            </div>
+        </nav>
+
+        <!-- Mobile fullscreen menu -->
+        <div class="nav-mobile" id="nav-mobile">
+            <button class="nav-mobile-close" id="nav-mobile-close" aria-label="Close menu">
+                <span></span><span></span>
+            </button>
+            <a href="/" class={currentPath === '/' ? 'active' : ''}>home</a>
+            <a href="/posts" class={currentPath.startsWith('/posts') ? 'active' : ''}>writing</a>
+            <button class="theme-toggle" id="theme-toggle-mobile" aria-label="Toggle theme">
+                <span id="theme-label-mobile">light mode</span>
+            </button>
         </div>
 
         <slot />
@@ -47,6 +79,7 @@ const currentPath = Astro.url.pathname;
                     <div class="footer-links">
                         <a href="https://github.com/saeeedhany" target="_blank" rel="noopener">GitHub</a>
                         <a href="https://x.com/S8eed_" target="_blank" rel="noopener">𝕏</a>
+                        <a href="https://www.reddit.com/user/s_saeed_1/" target="_blank" rel="noopener">Reddit</a>
                         <a href="mailto:alsaeedalbasi0ny@gmail.com">say hi</a>
                     </div>
                 </div>
@@ -54,3 +87,98 @@ const currentPath = Astro.url.pathname;
         </div>
     </body>
 </html>
+
+<script>
+// ── Theme ──
+const root = document.documentElement;
+const toggleBtn = document.getElementById('theme-toggle');
+const toggleMobile = document.getElementById('theme-toggle-mobile');
+const themeIcon = document.getElementById('theme-icon');
+
+const MOON = '○';
+const SUN = '●';
+
+function getTheme() {
+  return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+}
+
+function applyTheme(theme: string) {
+  if (theme === 'light') {
+    root.setAttribute('data-theme', 'light');
+  } else {
+    root.removeAttribute('data-theme');
+  }
+  localStorage.setItem('theme', theme);
+  // Update icon
+  if (themeIcon) themeIcon.textContent = theme === 'light' ? SUN : MOON;
+  const label = document.getElementById('theme-label-mobile');
+  if (label) label.textContent = theme === 'light' ? 'dark mode' : 'light mode';
+}
+
+function toggleTheme() {
+  applyTheme(getTheme() === 'dark' ? 'light' : 'dark');
+}
+
+toggleBtn?.addEventListener('click', toggleTheme);
+toggleMobile?.addEventListener('click', toggleTheme);
+
+// Init icon state
+applyTheme(getTheme());
+
+// ── Sticky nav shrink on scroll ──
+const nav = document.getElementById('main-nav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 20) {
+    nav?.classList.add('scrolled');
+  } else {
+    nav?.classList.remove('scrolled');
+  }
+}, { passive: true });
+
+// ── Hamburger ──
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('nav-mobile');
+
+hamburger?.addEventListener('click', () => {
+  const isOpen = hamburger.classList.toggle('open');
+  if (isOpen) {
+    mobileMenu?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  } else {
+    mobileMenu?.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+});
+
+// Close menu helper
+function closeMenu() {
+  hamburger?.classList.remove('open');
+  mobileMenu?.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close button inside mobile menu
+document.getElementById('nav-mobile-close')?.addEventListener('click', closeMenu);
+
+// Close on mobile link click
+mobileMenu?.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', closeMenu);
+});
+
+// ── Hero scroll fade ──
+const heroImg = document.querySelector('.hero-image') as HTMLElement;
+const heroWrapper = document.querySelector('.hero-wrapper') as HTMLElement;
+
+if (heroImg && heroWrapper) {
+  window.addEventListener('scroll', () => {
+    const wrapperBottom = heroWrapper.getBoundingClientRect().bottom;
+    const wrapperHeight = heroWrapper.offsetHeight;
+    // Start fading when top of wrapper hits viewport top, finish when wrapper is gone
+    const progress = Math.max(0, Math.min(1, 1 - (wrapperBottom / wrapperHeight)));
+    const opacity = 1 - progress * 1.4;
+    const scale = 1 - progress * 0.06;
+    heroImg.style.opacity = String(Math.max(0, opacity));
+    heroImg.style.transform = `scale(${Math.max(0.94, scale)}) translateY(${progress * -24}px)`;
+  }, { passive: true });
+}
+</script>

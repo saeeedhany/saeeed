@@ -4,6 +4,7 @@ author: "David Thomas, Andrew Hunt"
 year: 1999
 status: read
 rating: 4
+cover: "/images/covers/the-pragmatic-programmer.jpg"
 tags: ["software", "craft", "engineering"]
 description: "A collection of principles and practices for writing better software — still relevant."
 relatedPosts: []

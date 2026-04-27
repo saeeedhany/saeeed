@@ -4,6 +4,7 @@ author: "Harold Abelson, Gerald Jay Sussman"
 year: 1996
 status: want
 rating: 5
+cover: "/images/covers/sicp.jpg"
 tags: ["cs", "lisp", "programming", "theory"]
 description: "The MIT classic. Forces you to think about computation from first principles."
 relatedPosts: []

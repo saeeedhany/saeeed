@@ -125,15 +125,21 @@ We sit 24px gap to the left of that. */
 
 <script>
 function buildTOC() {
+const toc = document.getElementById('toc');
 const article = document.querySelector('article');
 const tocList = document.getElementById('toc-list');
 if (!article || !tocList) return;
 
+// Clear any previously built TOC (important when navigating between posts)
+tocList.innerHTML = '';
+
 const headings = article.querySelectorAll('h2, h3');
 if (headings.length === 0) {
-document.getElementById('toc')?.remove();
-return;
+  if (toc) toc.style.display = 'none';
+  return;
 }
+
+if (toc) toc.style.display = '';
 
 headings.forEach((heading, i) => {
 if (!heading.id) heading.id = `h-${i}`;
@@ -163,4 +169,5 @@ headings.forEach(h => observer.observe(h));
 }
 
 buildTOC();
+document.addEventListener('astro:page-load', buildTOC);
 </script>

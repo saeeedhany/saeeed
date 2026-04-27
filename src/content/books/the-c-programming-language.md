@@ -5,6 +5,7 @@ year: 1988
 status: read
 rating: 5
 tags: ["c", "systems", "programming"]
+cover: "/images/covers/the-c-programming-language.png"
 description: "The definitive reference for C — written by the language's creators."
 relatedPosts: ["minimal-shell-c"]
 ---

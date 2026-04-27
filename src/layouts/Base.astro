@@ -136,126 +136,131 @@ if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
 </html>
 
 <script>
-// ── Player state (runs once, persists across navigations) ──
+// ── Player state ─────────────────────────────────────────────────────────────
+// Uses a singleton pattern on window so state survives Astro view transitions.
+// The <audio> element has transition:persist so the browser never destroys it.
+
 const PLAYLIST: Array<{ title: string; src: string; cover?: string }> = [
-  { title: 'Requim For A Dream', src: '/music/RFAD.mp3' },
+  { title: 'Requiem For A Dream', src: '/music/RFAD.mp3' },
   { title: 'track 02', src: '/music/02.mp3' },
 ];
 const DEFAULT_COVER = '/images/avatar.jpg';
 
-let idx = 0;
-let playing = false;
-const audio = document.getElementById('mu-audio') as HTMLAudioElement;
+// Guard: only initialise the core player logic once ever
+if (!(window as any).__muInit) {
+  (window as any).__muInit = true;
 
-type Inst = { play?: HTMLElement|null; bars?: HTMLElement|null; fill?: HTMLElement|null; barWrap?: HTMLElement|null };
-const instances: Inst[] = [];
+  let idx = 0;
+  let playing = false;
+  const audio = document.getElementById('mu-audio') as HTMLAudioElement;
 
-function syncUI() {
-  const icon = playing ? '&#9646;&#9646;' : '&#9654;';
-  instances.forEach(inst => {
-    if (inst.play) { inst.play.innerHTML = icon; inst.play.classList.toggle('playing', playing); }
-    if (inst.bars) inst.bars.classList.toggle('playing', playing);
-  });
-  const name = PLAYLIST[idx]?.title || '—';
-  const cpName = document.getElementById('cp-name');
-  if (cpName) { cpName.textContent = name; cpName.classList.toggle('playing', playing); }
-  const mpTrack = document.getElementById('mp-track-name');
-  if (mpTrack) mpTrack.textContent = name;
-  const cover = PLAYLIST[idx]?.cover || DEFAULT_COVER;
-  document.querySelectorAll<HTMLImageElement>('.player-cover').forEach(img => img.src = cover);
-  document.querySelectorAll('.corner-playlist-item').forEach((el, i) => {
-    el.classList.toggle('active', i === idx);
-  });
-  const bpTrack = document.getElementById('bp-track');
-  if (bpTrack) bpTrack.textContent = name;
-}
-
-function loadTrack(i: number) {
-  idx = ((i % PLAYLIST.length) + PLAYLIST.length) % PLAYLIST.length;
-  audio.src = PLAYLIST[idx]?.src || '';
-  syncUI();
-}
-
-function playPause() {
-  if (!audio.src || audio.src === window.location.href) loadTrack(0);
-  if (playing) { audio.pause(); playing = false; }
-  else { audio.play().catch(() => {}); playing = true; }
-  syncUI();
-}
-function prev() { loadTrack(idx - 1); if (playing) audio.play().catch(() => {}); syncUI(); }
-function next() { loadTrack(idx + 1); if (playing) audio.play().catch(() => {}); syncUI(); }
-
-audio.addEventListener('ended', next);
-audio.addEventListener('timeupdate', () => {
-  if (!audio.duration) return;
-  const pct = (audio.currentTime / audio.duration) * 100 + '%';
-  instances.forEach(inst => { if (inst.fill) inst.fill.style.width = pct; });
-  const cpFill = document.getElementById('cp-fill');
-  if (cpFill) cpFill.style.width = pct;
-});
-
-function setupSeek(el: HTMLElement|null) {
-  if (!el) return;
-  el.addEventListener('click', e => {
-    if (!audio.duration) return;
-    const r = el.getBoundingClientRect();
-    audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
-  });
-}
-
-function register(inst: Inst) {
-  instances.push(inst);
-  setupSeek(inst.barWrap || null);
-  syncUI();
-}
-
-// Corner player — persistent, wire up once
-const cpProgress = document.getElementById('cp-progress');
-setupSeek(cpProgress);
-document.getElementById('cp-prev')?.addEventListener('click', prev);
-document.getElementById('cp-next')?.addEventListener('click', next);
-register({ play: document.getElementById('cp-play'), bars: document.getElementById('cp-bars') });
-document.getElementById('cp-play')?.addEventListener('click', playPause);
-
-const playlistDrawer = document.getElementById('corner-playlist');
-const playlistInner = document.getElementById('corner-playlist-inner');
-const listBtn = document.getElementById('cp-list-btn');
-
-if (playlistInner) {
-  PLAYLIST.forEach((track, i) => {
-    const btn = document.createElement('button');
-    btn.className = 'corner-playlist-item' + (i === idx ? ' active' : '');
-    btn.innerHTML = `<span class="cpi-dot"></span>${track.title}`;
-    btn.addEventListener('click', () => {
-      loadTrack(i);
-      if (!playing) { playing = true; }
-      audio.play().catch(() => {});
-      syncUI();
+  function syncUI() {
+    const icon = playing ? '&#9646;&#9646;' : '&#9654;';
+    document.querySelectorAll<HTMLElement>('.np-play').forEach(btn => {
+      btn.innerHTML = icon;
+      btn.classList.toggle('playing', playing);
     });
-    playlistInner.appendChild(btn);
+    document.querySelectorAll<HTMLElement>('.np-bars, #cp-bars, #mob-nav-bars').forEach(el => {
+      el.classList.toggle('playing', playing);
+    });
+    const name = PLAYLIST[idx]?.title || '—';
+    const cpName = document.getElementById('cp-name');
+    if (cpName) { cpName.textContent = name; cpName.classList.toggle('playing', playing); }
+    const mpTrack = document.getElementById('mp-track-name');
+    if (mpTrack) mpTrack.textContent = name;
+    document.querySelectorAll<HTMLImageElement>('.player-cover').forEach(img => img.src = PLAYLIST[idx]?.cover || DEFAULT_COVER);
+    document.querySelectorAll('.corner-playlist-item').forEach((el, i) => el.classList.toggle('active', i === idx));
+  }
+
+  function loadTrack(i: number) {
+    idx = ((i % PLAYLIST.length) + PLAYLIST.length) % PLAYLIST.length;
+    audio.src = PLAYLIST[idx]?.src || '';
+    syncUI();
+  }
+
+  function playPause() {
+    if (!audio.src || audio.src === window.location.href) loadTrack(0);
+    if (playing) { audio.pause(); playing = false; }
+    else { audio.play().catch(() => {}); playing = true; }
+    syncUI();
+  }
+  function prev() { loadTrack(idx - 1); if (playing) audio.play().catch(() => {}); syncUI(); }
+  function next() { loadTrack(idx + 1); if (playing) audio.play().catch(() => {}); syncUI(); }
+
+  audio.addEventListener('ended', next);
+  audio.addEventListener('timeupdate', () => {
+    if (!audio.duration) return;
+    const pct = (audio.currentTime / audio.duration) * 100 + '%';
+    document.querySelectorAll<HTMLElement>('.np-bar-fill, #cp-fill').forEach(el => el.style.width = pct);
   });
+
+  function setupSeek(el: HTMLElement | null) {
+    if (!el) return;
+    el.addEventListener('click', e => {
+      if (!audio.duration) return;
+      const r = el.getBoundingClientRect();
+      audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
+    });
+  }
+
+  // Expose so onPageLoad can re-wire new DOM after navigation
+  (window as any).__mu = { playPause, prev, next, syncUI, setupSeek, loadTrack, PLAYLIST };
+
+  loadTrack(0);
+  syncUI();
 }
 
-listBtn?.addEventListener('click', () => {
-  const isOpen = playlistDrawer?.classList.toggle('open');
-  listBtn.classList.toggle('open', !!isOpen);
-});
+// ── Wire up persistent elements (corner player + mobile player) ──────────────
+// These elements have transition:persist so they survive navigation, but their
+// event listeners are torn down each time the script re-runs. Re-wire them.
 
-// Mobile player — persistent
-register({ play: document.getElementById('mp-play'), fill: document.getElementById('mp-bar-fill'), barWrap: document.getElementById('mp-bar-wrap') });
-register({ bars: document.getElementById('mob-nav-bars') });
-document.getElementById('mp-play')?.addEventListener('click', playPause);
-document.getElementById('mp-prev')?.addEventListener('click', prev);
-document.getElementById('mp-next')?.addEventListener('click', next);
+function wirePersistentPlayers() {
+  const { playPause, prev, next, syncUI, setupSeek, PLAYLIST: pl } = (window as any).__mu;
 
-// Expose for bio player
-(window as any).__mu = { playPause, prev, next, register };
+  // Corner player
+  setupSeek(document.getElementById('cp-progress'));
+  document.getElementById('cp-prev')?.addEventListener('click', prev);
+  document.getElementById('cp-next')?.addEventListener('click', next);
+  document.getElementById('cp-play')?.addEventListener('click', playPause);
 
-// Init
-loadTrack(0);
-syncUI();
+  // Rebuild playlist drawer items (they're inside transition:persist, so clear & rebuild)
+  const playlistInner = document.getElementById('corner-playlist-inner');
+  const playlistDrawer = document.getElementById('corner-playlist');
+  const listBtn = document.getElementById('cp-list-btn');
+  if (playlistInner) {
+    playlistInner.innerHTML = '';
+    pl.forEach((track: any, i: number) => {
+      const btn = document.createElement('button');
+      btn.className = 'corner-playlist-item';
+      btn.innerHTML = `<span class="cpi-dot"></span>${track.title}`;
+      btn.addEventListener('click', () => {
+        const { loadTrack } = (window as any).__mu;
+        loadTrack(i);
+        const audio = document.getElementById('mu-audio') as HTMLAudioElement;
+        audio.play().catch(() => {});
+        (window as any).__muPlaying = true;
+        syncUI();
+      });
+      playlistInner.appendChild(btn);
+    });
+  }
+  listBtn?.addEventListener('click', () => {
+    const isOpen = playlistDrawer?.classList.toggle('open');
+    listBtn.classList.toggle('open', !!isOpen);
+  });
 
-// ── Theme (runs once, elements are persistent) ──
+  // Mobile player
+  setupSeek(document.getElementById('mp-bar-wrap'));
+  document.getElementById('mp-play')?.addEventListener('click', playPause);
+  document.getElementById('mp-prev')?.addEventListener('click', prev);
+  document.getElementById('mp-next')?.addEventListener('click', next);
+
+  syncUI();
+}
+
+wirePersistentPlayers();
+
+// ── Theme ────────────────────────────────────────────────────────────────────
 const root = document.documentElement;
 function getTheme() { return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; }
 function applyTheme(t: string) {
@@ -270,11 +275,11 @@ document.getElementById('theme-toggle')?.addEventListener('click', () => applyTh
 document.getElementById('theme-toggle-mobile')?.addEventListener('click', () => applyTheme(getTheme() === 'dark' ? 'light' : 'dark'));
 applyTheme(getTheme());
 
-// ── Sticky nav ──
+// ── Sticky nav ───────────────────────────────────────────────────────────────
 const nav = document.getElementById('main-nav');
 window.addEventListener('scroll', () => nav?.classList.toggle('scrolled', window.scrollY > 20), { passive: true });
 
-// ── Hamburger ──
+// ── Hamburger ────────────────────────────────────────────────────────────────
 const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('nav-mobile');
 function closeMenu() {
@@ -290,9 +295,8 @@ hamburger?.addEventListener('click', () => {
 document.getElementById('nav-mobile-close')?.addEventListener('click', closeMenu);
 mobileMenu?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 
-// ── Per-page logic: runs after every navigation ──
+// ── Per-page logic (runs after every navigation) ─────────────────────────────
 function onPageLoad() {
-  // Update active nav links to reflect current path
   const path = window.location.pathname;
   document.querySelectorAll<HTMLAnchorElement>('.nav-links a, .nav-mobile a').forEach(a => {
     const href = a.getAttribute('href') || '';
@@ -300,7 +304,7 @@ function onPageLoad() {
     a.classList.toggle('active', isActive);
   });
 
-  // Hero scroll fade — re-bind since hero is new content each page
+  // Hero scroll fade
   const heroImg = document.querySelector('.hero-image') as HTMLElement;
   const heroWrapper = document.querySelector('.hero-wrapper') as HTMLElement;
   if (heroImg && heroWrapper) {
@@ -314,11 +318,10 @@ function onPageLoad() {
     window.addEventListener('scroll', heroScroll, { passive: true });
   }
 
-  // Close mobile menu on navigation
   closeMenu();
 
-  // Sync player UI in case bio player or cover elements exist on this page
-  syncUI();
+  // Re-wire persistent players after each navigation (elements persist but listeners reset)
+  wirePersistentPlayers();
 }
 
 document.addEventListener('astro:page-load', onPageLoad);

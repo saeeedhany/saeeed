@@ -8,80 +8,81 @@ const arPosts = await getCollection('ar', ({ data }) => !data.draft);
 const enSorted = enPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const arSorted = arPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-// Only English tags for the tag filter
 const enTags = [...new Set(enPosts.flatMap(p => p.data.tags))].sort();
+const arTags = [...new Set(arPosts.flatMap(p => p.data.tags))].sort();
 
 function fmtEn(date: Date) {
-  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 function fmtAr(date: Date) {
-  return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short' });
+return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short' });
 }
 ---
 
 <Base title="Writing — ysm.dev">
-  <div class="container">
+    <div class="container">
 
-    <div class="section-label" style="margin-bottom: 32px;">Writing</div>
+        <div class="section-label" style="margin-bottom: 32px;">Writing</div>
 
-    <!-- ── Lang switcher ── -->
-    <div class="lang-switcher">
-      <button class="lang-btn active" data-lang="en">English</button>
-      <button class="lang-btn" data-lang="ar">العربية</button>
+        <!-- ── Lang switcher ── -->
+        <div class="lang-switcher">
+            <button class="lang-btn active" data-lang="en">English</button>
+            <button class="lang-btn" data-lang="ar">العربية</button>
+        </div>
+
+        <!-- ── ENGLISH SECTION ── -->
+        <section id="section-en" class="lang-section">
+            <div class="tag-filter" id="en-tag-filter">
+                <button class="tag-btn active" data-tag="all">All</button>
+                {enTags.map(tag => (
+                <button class="tag-btn" data-tag={tag}>{tag}</button>
+                ))}
+            </div>
+            <ul class="posts-list" id="en-posts">
+                {enSorted.map(post => (
+                <li class="post-item" data-tags={post.data.tags.join(',')}>
+                    <a href={`/posts/en/${post.slug}`} class="post-link">
+                        <span class="post-title">{post.data.title}</span>
+                        <span class="post-meta">
+                            {post.data.tags.slice(0, 2).map(tag => (
+                            <span class="post-tag">{tag}</span>
+                            ))}
+                            <span class="post-date">{fmtEn(post.data.date)}</span>
+                        </span>
+                    </a>
+                </li>
+                ))}
+            </ul>
+            <div id="en-empty" class="empty-state" style="display:none;"><p>No posts found.</p></div>
+        </section>
+
+        <!-- ── ARABIC SECTION ── -->
+        <section id="section-ar" class="lang-section" style="display:none;" dir="rtl">
+            <div class="tag-filter" id="ar-tag-filter">
+                <button class="tag-btn-ar active-ar" data-tag="all">الكل</button>
+                {arTags.map(tag => (
+                <button class="tag-btn-ar" data-tag={tag}>{tag}</button>
+                ))}
+            </div>
+            <ul class="posts-list" id="ar-posts">
+                {arSorted.map(post => (
+                <li class="post-item" data-tags={post.data.tags.join(',')}>
+                    <a href={`/posts/ar/${post.slug}`} class="post-link">
+                        <span class="post-title post-title-ar">{post.data.title}</span>
+                        <span class="post-meta" style="flex-direction:row-reverse;">
+                            {post.data.tags.slice(0, 2).map(tag => (
+                            <span class="post-tag">{tag}</span>
+                            ))}
+                            <span class="post-date">{fmtAr(post.data.date)}</span>
+                        </span>
+                    </a>
+                </li>
+                ))}
+            </ul>
+            <div id="ar-empty" class="empty-state" style="display:none;"><p>لا توجد مقالات.</p></div>
+        </section>
+
     </div>
-
-    <!-- ── ENGLISH SECTION ── -->
-    <section id="section-en" class="lang-section">
-
-      <!-- Tag filter — only for EN -->
-      <div class="tag-filter" id="tag-filter">
-        <button class="tag-btn active" data-tag="all">All</button>
-        {enTags.map(tag => (
-          <button class="tag-btn" data-tag={tag}>{tag}</button>
-        ))}
-      </div>
-
-      <ul class="posts-list" id="en-posts">
-        {enSorted.map(post => (
-          <li class="post-item" data-tags={post.data.tags.join(',')}>
-            <a href={`/posts/en/${post.slug}`} class="post-link">
-              <span class="post-title">{post.data.title}</span>
-              <span class="post-meta">
-                {post.data.tags.slice(0, 2).map(tag => (
-                  <span class="post-tag">{tag}</span>
-                ))}
-                <span class="post-date">{fmtEn(post.data.date)}</span>
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-
-      <div id="en-empty" class="empty-state" style="display:none;">
-        <p>No posts found.</p>
-      </div>
-    </section>
-
-    <!-- ── ARABIC SECTION ── -->
-    <section id="section-ar" class="lang-section" style="display:none;" dir="rtl">
-      <ul class="posts-list">
-        {arSorted.map(post => (
-          <li class="post-item">
-            <a href={`/posts/ar/${post.slug}`} class="post-link">
-              <span class="post-title post-title-ar">{post.data.title}</span>
-              <span class="post-meta" style="flex-direction:row-reverse;">
-                {post.data.tags.slice(0, 2).map(tag => (
-                  <span class="post-tag">{tag}</span>
-                ))}
-                <span class="post-date">{fmtAr(post.data.date)}</span>
-              </span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
-
-  </div>
 </Base>
 
 <style>
@@ -106,9 +107,7 @@ function fmtAr(date: Date) {
   margin-bottom: -1px;
 }
 
-.lang-btn:hover {
-  color: var(--cream);
-}
+.lang-btn:hover { color: var(--cream); }
 
 .lang-btn.active {
   color: var(--cream);
@@ -155,6 +154,29 @@ function fmtAr(date: Date) {
   background: rgba(58, 143, 196, 0.06);
 }
 
+/* Arabic tag buttons */
+.tag-btn-ar {
+  font-family: var(--font-ar);
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.tag-btn-ar:hover {
+  border-color: var(--cream);
+  color: var(--cream);
+}
+
+.tag-btn-ar.active-ar {
+  border-color: var(--amber);
+  color: var(--amber);
+  background: rgba(200, 169, 74, 0.06);
+}
+
 .empty-state p {
   color: var(--muted);
   font-size: 0.8rem;
@@ -167,54 +189,60 @@ function fmtAr(date: Date) {
 const langBtns = document.querySelectorAll<HTMLButtonElement>('.lang-btn');
 const sectionEn = document.getElementById('section-en')!;
 const sectionAr = document.getElementById('section-ar')!;
-const tagFilter = document.getElementById('tag-filter')!;
 
 langBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     langBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-
     const lang = btn.dataset.lang;
-    if (lang === 'en') {
-      sectionEn.style.display = '';
-      sectionAr.style.display = 'none';
-      tagFilter.style.display = '';
-    } else {
-      sectionEn.style.display = 'none';
-      sectionAr.style.display = '';
-      tagFilter.style.display = 'none';
-    }
+    sectionEn.style.display = lang === 'en' ? '' : 'none';
+    sectionAr.style.display = lang === 'ar' ? '' : 'none';
   });
 });
 
-// Tag filter (EN only)
-const tagBtns = document.querySelectorAll<HTMLButtonElement>('.tag-btn');
+// EN tag filter
+const enTagBtns = document.querySelectorAll<HTMLButtonElement>('#en-tag-filter .tag-btn');
 const enItems = document.querySelectorAll<HTMLElement>('#en-posts .post-item');
 const enEmpty = document.getElementById('en-empty')!;
 
-tagBtns.forEach(btn => {
+enTagBtns.forEach(btn => {
   btn.addEventListener('click', () => {
-    tagBtns.forEach(b => b.classList.remove('active'));
+    enTagBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-
     const tag = btn.dataset.tag || 'all';
     let visible = 0;
-
     enItems.forEach(item => {
-      const tags = (item.dataset.tags || '').split(',');
-      const show = tag === 'all' || tags.includes(tag);
+      const show = tag === 'all' || (item.dataset.tags || '').split(',').includes(tag);
       item.style.display = show ? '' : 'none';
       if (show) visible++;
     });
-
     enEmpty.style.display = visible === 0 ? 'block' : 'none';
+  });
+});
+
+// AR tag filter
+const arTagBtns = document.querySelectorAll<HTMLButtonElement>('#ar-tag-filter .tag-btn-ar');
+const arItems = document.querySelectorAll<HTMLElement>('#ar-posts .post-item');
+const arEmpty = document.getElementById('ar-empty')!;
+
+arTagBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    arTagBtns.forEach(b => b.classList.remove('active-ar'));
+    btn.classList.add('active-ar');
+    const tag = btn.dataset.tag || 'all';
+    let visible = 0;
+    arItems.forEach(item => {
+      const show = tag === 'all' || (item.dataset.tags || '').split(',').includes(tag);
+      item.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    arEmpty.style.display = visible === 0 ? 'block' : 'none';
   });
 });
 
 // URL param ?lang=
 const params = new URLSearchParams(window.location.search);
-const langParam = params.get('lang');
-if (langParam === 'ar') {
+if (params.get('lang') === 'ar') {
   document.querySelector<HTMLButtonElement>('[data-lang="ar"]')?.click();
 }
 </script>

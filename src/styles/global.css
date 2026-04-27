@@ -146,6 +146,7 @@ body > nav + * {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
 }
 
 .nav-logo {
@@ -355,8 +356,8 @@ to {
     padding: 28px 48px;
     overflow: hidden;
     font-family: 'Amiri', serif;
-    font-size: clamp(0.99rem, 1.6vw, 2.0rem);
-    line-height: 2.1;
+    font-size: clamp(1.3rem, 2.4vw, 2.2rem);
+    line-height: 2.0;
     direction: rtl;
     text-align: justify;
     word-break: break-word;
@@ -759,6 +760,13 @@ footer {
 .footer-links a:hover { color: var(--cream); }
 
 /* ── Responsive ── */
+
+/* Hamburger appears at the same breakpoint as floating player disappears (≤1254px) */
+@media (max-width: 1254px) {
+    .nav-hamburger { display: flex; }
+    .nav-links { display: none; }
+}
+
 @media (max-width: 768px) {
     .post-page {
         grid-template-columns: 1fr;
@@ -770,11 +778,7 @@ footer {
 
     .hero-wrapper { margin-bottom: 40px; }
     .hero-image { max-height: 300px; }
-    .hero-text-bg { font-size: 0.9rem; padding: 20px 24px; }
-
-    /* Show hamburger, hide desktop links */
-    .nav-hamburger { display: flex; }
-    .nav-links { display: none; }
+    .hero-text-bg { font-size: clamp(1.1rem, 4vw, 1.5rem); padding: 16px 20px; line-height: 1.9; }
 
     .post-link {
         grid-template-columns: 1fr;
@@ -794,4 +798,274 @@ footer {
     .container { padding: 0 18px; }
     .nav-links { gap: 18px; }
     .post-header-title { font-size: 1.3rem; }
+}
+
+/* ══════════════════════════════════
+MUSIC PLAYER
+══════════════════════════════════ */
+
+/* ── Shared: bars ── */
+.np-bars {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 14px;
+    flex-shrink: 0;
+}
+.np-bars span {
+    display: block;
+    width: 2px;
+    height: 3px;
+    background: var(--border);
+    border-radius: 1px;
+    transition: background 200ms ease;
+}
+.np-bars.playing span {
+    background: var(--phosphor);
+    animation: bar-bounce 0.8s ease-in-out infinite alternate;
+}
+.np-bars.playing span:nth-child(1) { animation-delay:   0ms; animation-duration: .70s; }
+.np-bars.playing span:nth-child(2) { animation-delay: 100ms; animation-duration: .50s; }
+.np-bars.playing span:nth-child(3) { animation-delay:  60ms; animation-duration: .90s; }
+.np-bars.playing span:nth-child(4) { animation-delay: 180ms; animation-duration: .60s; }
+.np-bars.playing span:nth-child(5) { animation-delay:  40ms; animation-duration: .75s; }
+.np-bars.playing span:nth-child(6) { animation-delay: 220ms; animation-duration: .55s; }
+.np-bars.playing span:nth-child(7) { animation-delay:  80ms; animation-duration: .85s; }
+@keyframes bar-bounce { from { height: 2px; } to { height: 12px; } }
+
+/* ── Shared: progress bar ── */
+.np-bar-wrap {
+    height: 2px;
+    background: var(--border);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: height 100ms ease;
+}
+.np-bar-wrap:hover { height: 3px; }
+.np-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--phosphor);
+    transition: width 200ms linear;
+    pointer-events: none;
+}
+
+/* ── Shared: buttons ── */
+.np-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 0.5rem;
+    padding: 2px 5px;
+    font-family: var(--font-mono);
+    transition: color var(--transition);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.np-btn:hover { color: var(--cream); }
+.np-play {
+    font-size: 0.6rem;
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    color: var(--phosphor);
+    transition: color var(--transition), border-color var(--transition);
+}
+.np-play:hover { color: var(--cream); border-color: var(--muted); }
+.np-play.playing { color: var(--phosphor); border-color: var(--phosphor); }
+
+/* ══════════════════════════════════
+CORNER PLAYER (desktop ≥ 769px)
+══════════════════════════════════ */
+.corner-player {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    width: 220px;
+    z-index: 200;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    background: var(--bg-2);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Playlist drawer — hidden by default, slides up */
+.corner-playlist {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 260ms ease;
+    border-bottom: 1px solid transparent;
+}
+.corner-playlist.open {
+    max-height: 240px;
+    border-bottom-color: var(--border);
+}
+.corner-playlist-inner {
+    padding: 6px 0;
+    display: flex;
+    flex-direction: column;
+}
+.corner-playlist-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: color var(--transition), background var(--transition);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: none;
+    background: none;
+    font-family: var(--font-mono);
+    width: 100%;
+    text-align: left;
+}
+.corner-playlist-item:hover { color: var(--cream); background: rgba(255,255,255,0.03); }
+.corner-playlist-item.active { color: var(--phosphor); }
+.corner-playlist-item .cpi-dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--border);
+    flex-shrink: 0;
+    transition: background var(--transition);
+}
+.corner-playlist-item.active .cpi-dot { background: var(--phosphor); }
+
+/* Main controls row */
+.corner-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 12px;
+}
+.corner-track {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.corner-track-name {
+    font-size: 0.58rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.corner-track-name.playing { color: var(--cream); }
+
+/* Progress inside corner player */
+.corner-progress {
+    height: 2px;
+    background: var(--border);
+    cursor: pointer;
+    margin: 0 12px 10px;
+}
+.corner-progress:hover { height: 3px; margin-bottom: 9px; }
+.corner-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--phosphor);
+    transition: width 200ms linear;
+    pointer-events: none;
+}
+
+/* Playlist toggle button */
+.corner-list-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 0.55rem;
+    padding: 2px 4px;
+    font-family: var(--font-mono);
+    transition: color var(--transition);
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+}
+.corner-list-btn:hover,
+.corner-list-btn.open { color: var(--cream); }
+
+/* ── Bio top row (keeps avatar + player in a row) ── */
+.bio-top-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+.bio-top-row .bio-avatar {
+    margin-bottom: 0;
+    flex-shrink: 0;
+}
+
+/* ── Mobile nav track pill (≤1254px) ── */
+.mobile-nav-track {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none;
+}
+.mobile-nav-track .np-bars {
+    height: 12px;
+}
+.mobile-nav-track .np-bars span {
+    height: 3px;
+}
+
+/* ── Mobile fullscreen player ── */
+.mobile-player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    animation: menuSlideIn 220ms ease forwards;
+    animation-delay: 80ms;
+    width: 180px;
+}
+.mp-track-name {
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+    text-align: center;
+}
+.mp-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+}
+.mobile-player .np-btn { font-size: 0.6rem; padding: 4px 6px; }
+.mobile-player .np-play { font-size: 0.75rem; padding: 6px 16px; }
+.mobile-player .np-bar-wrap { width: 100%; }
+
+/* ── Responsive ── */
+@media (max-width: 1254px) {
+    .corner-player { display: none; }
+    .mobile-nav-track { display: flex; }
+}
+@media (min-width: 1255px) {
+    .mobile-nav-track { display: none; }
 }

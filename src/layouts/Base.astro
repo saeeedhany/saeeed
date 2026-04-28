@@ -1,6 +1,5 @@
 ---
 import '../styles/global.css';
-import { ViewTransitions } from 'astro:transitions';
 
 interface Props {
 title?: string;
@@ -25,26 +24,18 @@ const currentPath = Astro.url.pathname;
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <ViewTransitions />
         <script is:inline>
         (function() {
-const t = localStorage.getItem('theme');
-if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
-})();
-</script>
+            var t = localStorage.getItem('theme');
+            if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+        })();
+        </script>
     </head>
     <body>
-        <nav id="main-nav" transition:persist>
+        <nav id="main-nav">
             <div class="container">
                 <div class="nav-inner">
                     <a href="/" class="nav-logo">Saeed</a>
-
-                    <!-- Mobile: bars indicator centered in navbar -->
-                    <div class="mobile-nav-track" id="mobile-nav-track">
-                        <div class="np-bars" id="mob-nav-bars">
-                            <span></span><span></span><span></span><span></span><span></span>
-                        </div>
-                    </div>
 
                     <ul class="nav-links">
                         <li><a href="/" class={currentPath === '/' ? 'active' : ''}>home</a></li>
@@ -64,25 +55,13 @@ if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
             </div>
         </nav>
 
-        <!-- Mobile fullscreen menu -->
-        <div class="nav-mobile" id="nav-mobile" transition:persist>
+        <div class="nav-mobile" id="nav-mobile">
             <button class="nav-mobile-close" id="nav-mobile-close" aria-label="Close menu">
                 <span></span><span></span>
             </button>
             <a href="/" class={currentPath === '/' ? 'active' : ''}>home</a>
             <a href="/posts" class={currentPath.startsWith('/posts') ? 'active' : ''}>writing</a>
             <a href="/books" class={currentPath.startsWith('/books') ? 'active' : ''}>books</a>
-            <div class="mobile-player">
-                <div class="mp-track-name" id="mp-track-name">—</div>
-                <div class="mp-controls">
-                    <button class="np-btn" id="mp-prev">&#9664;</button>
-                    <button class="np-btn np-play" id="mp-play">&#9654;</button>
-                    <button class="np-btn" id="mp-next">&#9654;&#9654;</button>
-                </div>
-                <div class="np-bar-wrap" id="mp-bar-wrap">
-                    <div class="np-bar-fill" id="mp-bar-fill"></div>
-                </div>
-            </div>
             <button class="theme-toggle" id="theme-toggle-mobile">
                 <span id="theme-label-mobile">light mode</span>
             </button>
@@ -90,42 +69,13 @@ if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
 
         <slot />
 
-        <!-- Corner player (desktop only) -->
-        <div class="corner-player" id="corner-player" transition:persist>
-            <!-- Playlist drawer -->
-            <div class="corner-playlist" id="corner-playlist">
-                <div class="corner-playlist-inner" id="corner-playlist-inner">
-                    <!-- populated by JS -->
-                </div>
-            </div>
-            <!-- Controls -->
-            <div class="corner-controls">
-                <button class="np-btn" id="cp-prev">&#9664;</button>
-                <button class="np-btn np-play" id="cp-play">&#9654;</button>
-                <button class="np-btn" id="cp-next">&#9654;&#9654;</button>
-                <div class="corner-track">
-                    <span class="corner-track-name" id="cp-name">—</span>
-                </div>
-                <div class="np-bars" id="cp-bars">
-                    <span></span><span></span><span></span><span></span><span></span>
-                </div>
-                <button class="corner-list-btn" id="cp-list-btn" title="Playlist">≡</button>
-            </div>
-            <!-- Progress -->
-            <div class="corner-progress" id="cp-progress">
-                <div class="corner-progress-fill" id="cp-fill"></div>
-            </div>
-        </div>
-
-        <audio id="mu-audio" preload="none" transition:persist></audio>
-
         <div class="container">
             <footer>
                 <div class="footer-inner">
                     <span>© {new Date().getFullYear()} Saeed</span>
                     <div class="footer-links">
                         <a href="https://github.com/saeeedhany" target="_blank" rel="noopener">GitHub</a>
-                        <a href="https://x.com/S8eed_" target="_blank" rel="noopener">𝕏</a>
+                        <a href="https://x.com/S8eed_" target="_blank" rel="noopener">X</a>
                         <a href="https://www.reddit.com/user/s_saeed_1/" target="_blank" rel="noopener">Reddit</a>
                         <a href="mailto:alsaeedalbasi0ny@gmail.com">say hi</a>
                     </div>
@@ -136,193 +86,15 @@ if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
 </html>
 
 <script>
-// ── Player state ─────────────────────────────────────────────────────────────
-// Uses a singleton pattern on window so state survives Astro view transitions.
-// The <audio> element has transition:persist so the browser never destroys it.
+import { initTheme }   from '../scripts/theme';
+import { initNav }     from '../scripts/nav';
+import { buildTOC }    from '../scripts/toc';
+import { initPostsFilter } from '../scripts/posts-filter';
+import { initBooksFilter } from '../scripts/books-filter';
 
-const PLAYLIST: Array<{ title: string; src: string; cover?: string }> = [
-  { title: 'Requiem For A Dream', src: '/music/RFAD.mp3' },
-  { title: 'track 02', src: '/music/02.mp3' },
-];
-const DEFAULT_COVER = '/images/avatar.jpg';
-
-// Guard: only initialise the core player logic once ever
-if (!(window as any).__muInit) {
-  (window as any).__muInit = true;
-
-  let idx = 0;
-  let playing = false;
-  const audio = document.getElementById('mu-audio') as HTMLAudioElement;
-
-  function syncUI() {
-    const icon = playing ? '&#9646;&#9646;' : '&#9654;';
-    document.querySelectorAll<HTMLElement>('.np-play').forEach(btn => {
-      btn.innerHTML = icon;
-      btn.classList.toggle('playing', playing);
-    });
-    document.querySelectorAll<HTMLElement>('.np-bars, #cp-bars, #mob-nav-bars').forEach(el => {
-      el.classList.toggle('playing', playing);
-    });
-    const name = PLAYLIST[idx]?.title || '—';
-    const cpName = document.getElementById('cp-name');
-    if (cpName) { cpName.textContent = name; cpName.classList.toggle('playing', playing); }
-    const mpTrack = document.getElementById('mp-track-name');
-    if (mpTrack) mpTrack.textContent = name;
-    document.querySelectorAll<HTMLImageElement>('.player-cover').forEach(img => img.src = PLAYLIST[idx]?.cover || DEFAULT_COVER);
-    document.querySelectorAll('.corner-playlist-item').forEach((el, i) => el.classList.toggle('active', i === idx));
-  }
-
-  function loadTrack(i: number) {
-    idx = ((i % PLAYLIST.length) + PLAYLIST.length) % PLAYLIST.length;
-    audio.src = PLAYLIST[idx]?.src || '';
-    syncUI();
-  }
-
-  function playPause() {
-    if (!audio.src || audio.src === window.location.href) loadTrack(0);
-    if (playing) { audio.pause(); playing = false; }
-    else { audio.play().catch(() => {}); playing = true; }
-    syncUI();
-  }
-  function prev() { loadTrack(idx - 1); if (playing) audio.play().catch(() => {}); syncUI(); }
-  function next() { loadTrack(idx + 1); if (playing) audio.play().catch(() => {}); syncUI(); }
-
-  audio.addEventListener('ended', next);
-  audio.addEventListener('timeupdate', () => {
-    if (!audio.duration) return;
-    const pct = (audio.currentTime / audio.duration) * 100 + '%';
-    document.querySelectorAll<HTMLElement>('.np-bar-fill, #cp-fill').forEach(el => el.style.width = pct);
-  });
-
-  function setupSeek(el: HTMLElement | null) {
-    if (!el) return;
-    el.addEventListener('click', e => {
-      if (!audio.duration) return;
-      const r = el.getBoundingClientRect();
-      audio.currentTime = ((e.clientX - r.left) / r.width) * audio.duration;
-    });
-  }
-
-  // Expose so onPageLoad can re-wire new DOM after navigation
-  (window as any).__mu = { playPause, prev, next, syncUI, setupSeek, loadTrack, PLAYLIST };
-
-  loadTrack(0);
-  syncUI();
-}
-
-// ── Wire up persistent elements (corner player + mobile player) ──────────────
-// These elements have transition:persist so they survive navigation, but their
-// event listeners are torn down each time the script re-runs. Re-wire them.
-
-function wirePersistentPlayers() {
-  const { playPause, prev, next, syncUI, setupSeek, PLAYLIST: pl } = (window as any).__mu;
-
-  // Corner player
-  setupSeek(document.getElementById('cp-progress'));
-  document.getElementById('cp-prev')?.addEventListener('click', prev);
-  document.getElementById('cp-next')?.addEventListener('click', next);
-  document.getElementById('cp-play')?.addEventListener('click', playPause);
-
-  // Rebuild playlist drawer items (they're inside transition:persist, so clear & rebuild)
-  const playlistInner = document.getElementById('corner-playlist-inner');
-  const playlistDrawer = document.getElementById('corner-playlist');
-  const listBtn = document.getElementById('cp-list-btn');
-  if (playlistInner) {
-    playlistInner.innerHTML = '';
-    pl.forEach((track: any, i: number) => {
-      const btn = document.createElement('button');
-      btn.className = 'corner-playlist-item';
-      btn.innerHTML = `<span class="cpi-dot"></span>${track.title}`;
-      btn.addEventListener('click', () => {
-        const { loadTrack } = (window as any).__mu;
-        loadTrack(i);
-        const audio = document.getElementById('mu-audio') as HTMLAudioElement;
-        audio.play().catch(() => {});
-        (window as any).__muPlaying = true;
-        syncUI();
-      });
-      playlistInner.appendChild(btn);
-    });
-  }
-  listBtn?.addEventListener('click', () => {
-    const isOpen = playlistDrawer?.classList.toggle('open');
-    listBtn.classList.toggle('open', !!isOpen);
-  });
-
-  // Mobile player
-  setupSeek(document.getElementById('mp-bar-wrap'));
-  document.getElementById('mp-play')?.addEventListener('click', playPause);
-  document.getElementById('mp-prev')?.addEventListener('click', prev);
-  document.getElementById('mp-next')?.addEventListener('click', next);
-
-  syncUI();
-}
-
-wirePersistentPlayers();
-
-// ── Theme ────────────────────────────────────────────────────────────────────
-const root = document.documentElement;
-function getTheme() { return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark'; }
-function applyTheme(t: string) {
-  t === 'light' ? root.setAttribute('data-theme', 'light') : root.removeAttribute('data-theme');
-  localStorage.setItem('theme', t);
-  const icon = document.getElementById('theme-icon');
-  if (icon) icon.textContent = t === 'light' ? 'dark' : 'light';
-  const label = document.getElementById('theme-label-mobile');
-  if (label) label.textContent = t === 'light' ? 'dark mode' : 'light mode';
-}
-document.getElementById('theme-toggle')?.addEventListener('click', () => applyTheme(getTheme() === 'dark' ? 'light' : 'dark'));
-document.getElementById('theme-toggle-mobile')?.addEventListener('click', () => applyTheme(getTheme() === 'dark' ? 'light' : 'dark'));
-applyTheme(getTheme());
-
-// ── Sticky nav ───────────────────────────────────────────────────────────────
-const nav = document.getElementById('main-nav');
-window.addEventListener('scroll', () => nav?.classList.toggle('scrolled', window.scrollY > 20), { passive: true });
-
-// ── Hamburger ────────────────────────────────────────────────────────────────
-const hamburger = document.getElementById('hamburger');
-const mobileMenu = document.getElementById('nav-mobile');
-function closeMenu() {
-  hamburger?.classList.remove('open');
-  mobileMenu?.classList.remove('open');
-  document.body.style.overflow = '';
-}
-hamburger?.addEventListener('click', () => {
-  const open = hamburger.classList.toggle('open');
-  mobileMenu?.classList.toggle('open', open);
-  document.body.style.overflow = open ? 'hidden' : '';
-});
-document.getElementById('nav-mobile-close')?.addEventListener('click', closeMenu);
-mobileMenu?.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
-
-// ── Per-page logic (runs after every navigation) ─────────────────────────────
-function onPageLoad() {
-  const path = window.location.pathname;
-  document.querySelectorAll<HTMLAnchorElement>('.nav-links a, .nav-mobile a').forEach(a => {
-    const href = a.getAttribute('href') || '';
-    const isActive = href === '/' ? path === '/' : path.startsWith(href);
-    a.classList.toggle('active', isActive);
-  });
-
-  // Hero scroll fade
-  const heroImg = document.querySelector('.hero-image') as HTMLElement;
-  const heroWrapper = document.querySelector('.hero-wrapper') as HTMLElement;
-  if (heroImg && heroWrapper) {
-    const heroScroll = () => {
-      const b = heroWrapper.getBoundingClientRect().bottom;
-      const h = heroWrapper.offsetHeight;
-      const p = Math.max(0, Math.min(1, 1 - b / h));
-      heroImg.style.opacity = String(Math.max(0, 1 - p * 1.4));
-      heroImg.style.transform = `scale(${Math.max(0.94, 1 - p * 0.06)}) translateY(${p * -24}px)`;
-    };
-    window.addEventListener('scroll', heroScroll, { passive: true });
-  }
-
-  closeMenu();
-
-  // Re-wire persistent players after each navigation (elements persist but listeners reset)
-  wirePersistentPlayers();
-}
-
-document.addEventListener('astro:page-load', onPageLoad);
+initTheme();
+initNav();
+buildTOC();
+initPostsFilter();
+initBooksFilter();
 </script>

@@ -55,40 +55,19 @@ const isAr = lang === 'ar';
 </Base>
 
 <style>
-/* TOC floats to the left of the viewport, outside the content column */
+/* TOC: fixed outside the container, left or right depending on RTL */
 .toc {
     position: fixed;
     top: 120px;
-    /* Place it just to the left of where the container starts.
-Container max-width is 700px, so it starts at (50vw - 350px).
-We sit 24px gap to the left of that. */
     right: calc(50% + 350px + 32px);
     width: 160px;
     max-height: calc(100vh - 160px);
     overflow-y: hidden;
 }
 
-/* For Arabic posts, TOC goes to the right side */
 .toc--rtl {
     right: auto;
     left: calc(50% + 350px + 32px);
-}
-
-.toc-label {
-    font-size: 0.6rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 14px;
-}
-
-.toc-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    border-left: 1px solid var(--border);
-    padding-left: 14px;
 }
 
 .toc--rtl .toc-list {
@@ -98,76 +77,10 @@ We sit 24px gap to the left of that. */
     padding-right: 14px;
 }
 
-.toc-item a {
-    font-size: 0.7rem;
-    color: var(--muted);
-    transition: color var(--transition);
-    line-height: 1.5;
-    display: block;
-}
-
-.toc-item a:hover,
-.toc-item a.active {
-    color: var(--blue);
-}
-
-.toc-item--h3 {
-    padding-left: 10px;
-}
-
-/* Hide TOC when viewport is not wide enough to show it outside */
+/* Hide when viewport is too narrow */
 @media (max-width: 1120px) {
-    .toc {
-        display: none;
-    }
+    .toc { display: none; }
 }
 </style>
 
-<script>
-function buildTOC() {
-const toc = document.getElementById('toc');
-const article = document.querySelector('article');
-const tocList = document.getElementById('toc-list');
-if (!article || !tocList) return;
 
-// Clear any previously built TOC (important when navigating between posts)
-tocList.innerHTML = '';
-
-const headings = article.querySelectorAll('h2, h3');
-if (headings.length === 0) {
-  if (toc) toc.style.display = 'none';
-  return;
-}
-
-if (toc) toc.style.display = '';
-
-headings.forEach((heading, i) => {
-if (!heading.id) heading.id = `h-${i}`;
-const li = document.createElement('li');
-li.className = `toc-item${heading.tagName === 'H3' ? ' toc-item--h3' : ''}`;
-const a = document.createElement('a');
-a.href = `#${heading.id}`;
-a.textContent = heading.textContent || '';
-li.appendChild(a);
-tocList.appendChild(li);
-});
-
-const observer = new IntersectionObserver(
-(entries) => {
-entries.forEach(entry => {
-const link = tocList.querySelector(`a[href="#${entry.target.id}"]`);
-if (entry.isIntersecting) {
-tocList.querySelectorAll('a').forEach(a => a.classList.remove('active'));
-link?.classList.add('active');
-}
-});
-},
-{ rootMargin: '-20% 0px -70% 0px' }
-);
-
-headings.forEach(h => observer.observe(h));
-}
-
-buildTOC();
-document.addEventListener('astro:page-load', buildTOC);
-</script>

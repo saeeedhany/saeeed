@@ -1,29 +1,80 @@
-// src/scripts/books-filter.ts
-// Tag filtering for /books. Re-runs after View Transitions.
-
 export function initBooksFilter() {
-  const tagBtns  = document.querySelectorAll<HTMLButtonElement>('#books-tag-filter .tag-btn');
-  const bookCards = document.querySelectorAll<HTMLElement>('.book-card');
+  const tabs      = document.querySelectorAll<HTMLButtonElement>('.books-tab');
+  const panels    = document.querySelectorAll<HTMLElement>('.books-cat-panel');
+  const topicRows = document.querySelectorAll<HTMLElement>('.books-topic-row');
+  const search    = document.getElementById('books-search') as HTMLInputElement | null;
 
-  if (tagBtns.length === 0) return; // not on the books page
+  if (tabs.length === 0) return;
 
-  tagBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      tagBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const tag = btn.dataset.tag ?? 'all';
+  let activeCat   = tabs[0]?.dataset.cat ?? '';
+  let activeTopic = 'all';
+  let searchQuery = '';
 
-      bookCards.forEach(card => {
-        const cardTags = (card.dataset.tags ?? '').split(',');
-        const show = tag === 'all' || cardTags.includes(tag);
-        card.classList.toggle('hidden', !show);
+  function applyFilters() {
+    panels.forEach(panel => {
+      const isActiveCat = panel.dataset.cat === activeCat;
+      panel.classList.toggle('active', isActiveCat);
+      if (!isActiveCat) return;
+
+      const cards = panel.querySelectorAll<HTMLElement>('.book-card');
+      cards.forEach(card => {
+        const tags    = (card.dataset.tags ?? '').split(',');
+        const title   = card.dataset.title  ?? '';
+        const author  = card.dataset.author ?? '';
+
+        const topicOk  = activeTopic === 'all' || tags.includes(activeTopic);
+        const searchOk = searchQuery === '' ||
+          title.includes(searchQuery) || author.includes(searchQuery);
+
+        card.classList.toggle('hidden', !topicOk || !searchOk);
       });
 
-      // Hide sections with no visible cards
-      document.querySelectorAll<HTMLElement>('.books-section').forEach(section => {
+      // Hide empty sections
+      panel.querySelectorAll<HTMLElement>('.books-section').forEach(section => {
         const visible = section.querySelectorAll('.book-card:not(.hidden)').length;
         section.style.display = visible === 0 ? 'none' : '';
       });
     });
+  }
+
+  // Category tab click
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeCat   = tab.dataset.cat ?? '';
+      activeTopic = 'all';
+
+      // Switch topic row
+      topicRows.forEach(row => {
+        const isActive = row.dataset.cat === activeCat;
+        row.classList.toggle('active', isActive);
+        if (isActive) {
+          row.querySelectorAll<HTMLButtonElement>('.tag-btn').forEach((b, i) => {
+            b.classList.toggle('active', i === 0);
+          });
+        }
+      });
+
+      applyFilters();
+    });
+  });
+
+  // Topic button click (delegated per row)
+  topicRows.forEach(row => {
+    row.querySelectorAll<HTMLButtonElement>('.tag-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        row.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeTopic = btn.dataset.topic ?? 'all';
+        applyFilters();
+      });
+    });
+  });
+
+  // Search
+  search?.addEventListener('input', () => {
+    searchQuery = search.value.toLowerCase().trim();
+    applyFilters();
   });
 }

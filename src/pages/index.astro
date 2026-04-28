@@ -4,20 +4,37 @@ import { getCollection } from 'astro:content';
 
 const enPosts = await getCollection('en', ({ data }) => !data.draft);
 const arPosts = await getCollection('ar', ({ data }) => !data.draft);
+const allBooks = await getCollection('books', ({ data }) => !data.draft && data.recommended);
 
-const enSorted = enPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 5);
-const arSorted = arPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 5);
+const enSorted = enPosts.sort((a,b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0,5);
+const arSorted = arPosts.sort((a,b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0,5);
 
-function fmtEn(date: Date) {
-return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
-}
-function fmtAr(date: Date) {
-return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short' });
-}
+const categoryOrder = ['technical','non-fiction','fiction','garbage'] as const;
+const categoryLabel: Record<string,string> = {
+  technical: 'Technical', 'non-fiction': 'Non-Fiction', fiction: 'Fiction', garbage: 'Garbage',
+};
+
+const recommended = categoryOrder
+  .map(cat => allBooks.find(b => b.data.category === cat))
+  .filter(Boolean);
+
+// Serialise only what the client needs
+const recData = recommended.map(b => ({
+  slug:   b.slug,
+  title:  b.data.title,
+  author: b.data.author,
+  cat:    categoryLabel[b.data.category] ?? b.data.category,
+  rating: b.data.rating ?? 0,
+  note:   b.data.recommendNote ?? '',
+  cover:  b.data.cover ?? '',
+  initials: b.data.title.slice(0,2).toUpperCase(),
+}));
+
+function fmtEn(d:Date){ return d.toLocaleDateString('en-US',{year:'numeric',month:'short'}); }
+function fmtAr(d:Date){ return d.toLocaleDateString('ar-EG',{year:'numeric',month:'short'}); }
 ---
 
 <Base>
-    <!-- Hero image -->
     <div class="hero-wrapper">
         <div class="hero-text-bg" aria-hidden="true">
             الحق مطلوب لذاته، وكل مطلوب لذاته فليس يعني طالبه غير وجوده، ووجود الحق صعب، والطريق اليه وعر، والحقائق منغمسة في الشبهات، وحسن الظن بالعلماء في طباع جميع الناس. فالناظر في كتب العلماء اذا استرسل مع طبعه، وجعل غرضه فهم ما ذكروه وغاية ما أوردوه حصلت الحقائق عنده هي المعاني التي قصدوا لها والغايات التي أشاروا اليها. وما عصم الله العلماء من الزلل، ولا حمى علمهم من التقصير والخلل، ولو كان ذلك كذلك لما اختلف العلماء في شيء من العلوم، ولا تفرقت آراؤهم في شيء من حقائق الأمور، والوجود بخلاف ذلك. فطالب الحق ليس هو الناظر في كتب المتقدمين المسترسل مع طبعه في حسن الظن بهم، بل طالب الحق هو المتهم لظنه فيهم، المتوقف فيما يفهمه عنهم، المتبع الحجة والبرهان، لا قول القائل الذي هو إنسان، المخصوص في جبلته بضروب الخل والنقصان. والواجب على الناظر في كتب العلوم إذا كان غرضه معرفة الحقائق أن يجعل نفسه خصمًا لكل ما ينظر فيه، ويُجيل فكره في متنه وفي جميع حواشيه، ويخصمه من جميع جهاته ونواحيه، ويتهم أيضًا نفسه عند خصامه فلا يتحامل عليه ولا يتسمح فيه، فإنه إذا سلك هذه الطريقة انكشفت له
@@ -27,11 +44,10 @@ return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short' });
 
     <div class="container">
         <section class="bio">
-            <img src="/images/avatar.jpg" alt="Saeed" class="bio-avatar player-cover" onerror="this.style.display='none'" />
-
-            <div class="bio-name">Saeed</div>
+            <img src="/images/avatar.jpg" alt="Saeed" class="bio-avatar" onerror="this.style.display='none'" />
+            <div class="bio-name">Saeed / dev</div>
             <p class="bio-text">
-                I build systems, CLI tools, and low-level stuff. <br />
+                I build systems, CLI tools, and low-level stuff.<br />
                 Interested in operating systems, computer architecture, C, and simple web.<br /><br />
                 Currently working on <a href="https://github.com/Abserny" class="link-underline">Abserny</a>,{' '}
                 <a href="https://github.com/DDumbying" class="link-underline">;DD</a>, and some web stuff like{' '}
@@ -44,6 +60,49 @@ return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short' });
             </p>
         </section>
 
+        {recommended.length > 0 && (
+        <section class="rec-section">
+            <div class="section-label">Worth Reading</div>
+
+            <div class="rec-widget" id="rec-widget">
+
+                <!-- Info panel (left) -->
+                <div class="rec-info" id="rec-info">
+                    <span class="rec-cat" id="rec-cat"></span>
+                    <h2 class="rec-title" id="rec-title"></h2>
+                    <span class="rec-author" id="rec-author"></span>
+                    <span class="rec-rating" id="rec-rating"></span>
+                    <p class="rec-note" id="rec-note"></p>
+                    <a class="rec-link link-underline" id="rec-link" href="#">read my notes →</a>
+                </div>
+
+                <!-- Cover (right) with hit zones -->
+                <div class="rec-cover-wrap">
+                    <button class="rec-hit rec-hit--prev" id="rec-prev" aria-label="Previous book">‹</button>
+
+                    <a class="rec-cover" id="rec-cover-link" href="#">
+                        <div class="rec-cover-placeholder" id="rec-cover-placeholder">
+                            <span id="rec-initials"></span>
+                        </div>
+                        <img id="rec-cover-img" src="" alt="" style="display:none" />
+                    </a>
+
+                    <button class="rec-hit rec-hit--next" id="rec-next" aria-label="Next book">›</button>
+                </div>
+
+            </div>
+
+            <!-- Dots -->
+            <div class="rec-dots" id="rec-dots">
+                {recommended.map((_, i) => (
+                    <button class={`rec-dot${i===0?' active':''}`} data-i={i} aria-label={`Book ${i+1}`}></button>
+                ))}
+            </div>
+
+            <a href="/books" class="more-link link-underline">all books →</a>
+        </section>
+        )}
+
         {enSorted.length > 0 && (
         <section class="lang-block">
             <div class="section-label">Writing / English</div>
@@ -53,9 +112,7 @@ return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short' });
                     <a href={`/posts/en/${post.slug}`} class="post-link">
                         <span class="post-title">{post.data.title}</span>
                         <span class="post-meta">
-                            {post.data.tags.slice(0, 1).map(tag => (
-                            <span class="post-tag">{tag}</span>
-                            ))}
+                            {post.data.tags.slice(0,1).map(tag => <span class="post-tag">{tag}</span>)}
                             <span class="post-date">{fmtEn(post.data.date)}</span>
                         </span>
                     </a>
@@ -75,9 +132,7 @@ return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short' });
                     <a href={`/posts/ar/${post.slug}`} class="post-link">
                         <span class="post-title post-title-ar">{post.data.title}</span>
                         <span class="post-meta">
-                            {post.data.tags.slice(0, 1).map(tag => (
-                            <span class="post-tag">{tag}</span>
-                            ))}
+                            {post.data.tags.slice(0,1).map(tag => <span class="post-tag">{tag}</span>)}
                             <span class="post-date">{fmtAr(post.data.date)}</span>
                         </span>
                     </a>
@@ -89,6 +144,87 @@ return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short' });
         )}
     </div>
 </Base>
+
+<script define:vars={{ recData }}>
+const books = recData;
+if (!books.length) { /* nothing */ } else {
+
+let current = 0;
+
+const elCat      = document.getElementById('rec-cat');
+const elTitle    = document.getElementById('rec-title');
+const elAuthor   = document.getElementById('rec-author');
+const elRating   = document.getElementById('rec-rating');
+const elNote     = document.getElementById('rec-note');
+const elLink     = document.getElementById('rec-link');
+const elCoverLink= document.getElementById('rec-cover-link');
+const elCoverImg = document.getElementById('rec-cover-img');
+const elCoverPh  = document.getElementById('rec-cover-placeholder');
+const elInitials = document.getElementById('rec-initials');
+const elInfo     = document.getElementById('rec-info');
+const dots       = document.querySelectorAll('.rec-dot');
+
+function stars(n) {
+  if (!n) return '';
+  return '★'.repeat(n) + '☆'.repeat(5 - n);
+}
+
+function go(idx, dir) {
+  const b = books[idx];
+  if (!b) return;
+
+  // Slide info out
+  elInfo.style.transition = 'opacity 180ms ease, transform 180ms ease';
+  elInfo.style.opacity = '0';
+  elInfo.style.transform = `translateY(${dir > 0 ? '8px' : '-8px'})`;
+
+  setTimeout(() => {
+    // Update content
+    elCat.textContent     = b.cat;
+    elTitle.textContent   = b.title;
+    elAuthor.textContent  = b.author;
+    elRating.textContent  = stars(b.rating);
+    elNote.textContent    = b.note;
+    elLink.href           = '/books/' + b.slug;
+    elCoverLink.href      = '/books/' + b.slug;
+
+    if (b.cover) {
+      elCoverImg.src          = b.cover;
+      elCoverImg.alt          = b.title;
+      elCoverImg.style.display = 'block';
+      elCoverPh.style.display  = 'none';
+    } else {
+      elInitials.textContent   = b.initials;
+      elCoverImg.style.display = 'none';
+      elCoverPh.style.display  = 'flex';
+    }
+
+    // Update dots
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+
+    // Slide info back in from opposite side
+    elInfo.style.transform = `translateY(${dir > 0 ? '-8px' : '8px'})`;
+    requestAnimationFrame(() => {
+      elInfo.style.opacity   = '1';
+      elInfo.style.transform = 'translateY(0)';
+    });
+  }, 180);
+
+  current = idx;
+}
+
+function prev() { go((current - 1 + books.length) % books.length, -1); }
+function next() { go((current + 1) % books.length, 1); }
+
+document.getElementById('rec-prev')?.addEventListener('click', prev);
+document.getElementById('rec-next')?.addEventListener('click', next);
+dots.forEach((d, i) => d.addEventListener('click', () => go(i, i > current ? 1 : -1)));
+
+// Init
+go(0, 1);
+
+} // end if books.length
+</script>
 
 <style>
 .more-link {
@@ -106,4 +242,169 @@ return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'short' });
 .ar-label::after { order: -1; margin-right: 0; margin-left: 10px; }
 .ar-block .post-link { direction: rtl; }
 .ar-block .post-meta { flex-direction: row-reverse; }
+
+/* ── Worth Reading ── */
+.rec-section { margin-bottom: 72px; }
+
+.rec-widget {
+  display: grid;
+  grid-template-columns: 1fr 160px;
+  gap: 40px;
+  align-items: center;
+  margin: 0 0 20px;
+  min-height: 240px;
+}
+
+/* Info panel */
+.rec-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.rec-cat {
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--phosphor);
+}
+
+.rec-title {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--cream);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.rec-author {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.rec-rating {
+  font-size: 0.6rem;
+  color: var(--amber);
+  letter-spacing: 1.5px;
+  min-height: 14px;
+}
+
+.rec-note {
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.75;
+  margin: 4px 0 0;
+  max-width: 420px;
+}
+
+.rec-link {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  transition: color var(--transition);
+  width: fit-content;
+}
+.rec-link:hover { color: var(--blue); }
+
+/* Cover + hit zones */
+.rec-cover-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rec-cover {
+  display: block;
+  width: 120px;
+  aspect-ratio: 2/3;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--bg-3);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.rec-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.rec-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rec-cover-placeholder span {
+  font-size: 1.4rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+/* Prev/next hit zones — extend well outside the cover */
+.rec-hit {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 44px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--border);
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition);
+  z-index: 2;
+}
+
+.rec-hit--prev { right: calc(100% - 14px); }
+.rec-hit--next { left:  calc(100% - 14px); }
+
+.rec-hit:hover { color: var(--muted); }
+
+/* Dots */
+.rec-dots {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  padding-right: 20px;
+  margin-bottom: 4px;
+}
+
+.rec-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--border);
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background var(--transition);
+}
+
+.rec-dot.active { background: var(--muted); }
+
+@media (max-width: 540px) {
+  .rec-widget {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 24px;
+    min-height: unset;
+  }
+  .rec-cover-wrap { justify-content: flex-start; }
+  .rec-hit--prev { right: auto; left: -32px; }
+  .rec-hit--next { left: auto; right: -32px; }
+  .rec-dots { justify-content: flex-start; padding-right: 0; }
+}
 </style>

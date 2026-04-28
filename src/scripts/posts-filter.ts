@@ -8,7 +8,7 @@ export function initPostsFilter() {
 
   if (!sectionEn || !sectionAr) return; // not on the posts page
 
-  // Language switcher
+  // ── Language switcher ──────────────────────────────────────────────────────
   langBtns.forEach(btn => {
     btn.addEventListener('click', () => {
       langBtns.forEach(b => b.classList.remove('active'));
@@ -19,7 +19,7 @@ export function initPostsFilter() {
     });
   });
 
-  // English tag filter
+  // ── English tag filter ─────────────────────────────────────────────────────
   const enTagBtns = document.querySelectorAll<HTMLButtonElement>('#en-tag-filter .tag-btn');
   const enItems   = document.querySelectorAll<HTMLElement>('#en-posts .post-item');
   const enEmpty   = document.getElementById('en-empty');
@@ -39,7 +39,7 @@ export function initPostsFilter() {
     });
   });
 
-  // Arabic tag filter
+  // ── Arabic tag filter ──────────────────────────────────────────────────────
   const arTagBtns = document.querySelectorAll<HTMLButtonElement>('#ar-tag-filter .tag-btn-ar');
   const arItems   = document.querySelectorAll<HTMLElement>('#ar-posts .post-item');
   const arEmpty   = document.getElementById('ar-empty');
@@ -59,7 +59,7 @@ export function initPostsFilter() {
     });
   });
 
-  // Restore ?lang= query param
+  // ── Restore ?lang= query param ─────────────────────────────────────────────
   const params = new URLSearchParams(window.location.search);
   if (params.get('lang') === 'ar') {
     document.querySelector<HTMLButtonElement>('[data-lang="ar"]')?.click();

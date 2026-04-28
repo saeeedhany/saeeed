@@ -2,10 +2,11 @@
 title: "Operating Systems: Three Easy Pieces"
 author: "Remzi H. Arpaci-Dusseau, Andrea C. Arpaci-Dusseau"
 year: 2018
-status: reading
+status: read
 rating: 5
 cover: "/images/covers/operatin-systems-tep.jpg"
 tags: ["os", "systems", "cs"]
+category: technical
 description: "The best freely available OS textbook. Virtualization, concurrency, persistence — explained with clarity."
 relatedPosts: []
 ---

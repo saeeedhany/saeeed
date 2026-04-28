@@ -6,8 +6,11 @@ status: read
 rating: 5
 cover: "/images/covers/the-c-programming-language.png"
 tags: ["c", "systems", "programming"]
+category: technical
 description: "The definitive reference for C — written by the language's creators."
 relatedPosts: ["minimal-shell-c"]
+recommended: true
+recommendNote: "Still the clearest book ever written about C. Dense, no-nonsense, and written by the people who built the language. Every page earns its place."
 ---
 
 There's a reason this book is still required reading decades after it was written. K&R doesn't waste your time. Every page earns its place.

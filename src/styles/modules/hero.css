@@ -1,3 +1,4 @@
+/* ── Hero wrapper ── */
 .hero-wrapper {
     width: 100%;
     background: #000;
@@ -26,6 +27,7 @@
     will-change: opacity, transform;
 }
 
+/* ── Arabic text background layer ── */
 .hero-text-bg {
     position: absolute;
     inset: 0;
@@ -106,6 +108,7 @@
     flex-shrink: 0;
 }
 
+/* ── Responsive ── */
 @media (max-width: 768px) {
     .hero-wrapper { margin-bottom: 40px; }
     .hero-image { max-height: 300px; }

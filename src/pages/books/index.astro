@@ -4,95 +4,131 @@ import { getCollection } from 'astro:content';
 
 const allBooks = await getCollection('books', ({ data }) => !data.draft);
 
-const byStatus = {
-  reading: allBooks.filter(b => b.data.status === 'reading'),
-  read:    allBooks.filter(b => b.data.status === 'read'),
-  want:    allBooks.filter(b => b.data.status === 'want'),
+const categories = {
+  technical: {
+    label: 'Technical',
+    topics: ['cs', 'math', 'systems', 'programming', 'os', 'c', 'theory', 'engineering', 'linux'],
+  },
+  'non-fiction': {
+    label: 'Non-Fiction',
+    topics: ['science', 'philosophy', 'history', 'psychology', 'biography', 'economics'],
+  },
+  fiction: {
+    label: 'Fiction',
+    topics: ['novel', 'manga', 'film', 'anime', 'short-story'],
+  },
+  garbage: {
+    label: 'Garbage',
+    topics: ['self-healing', 'productivity', 'mindset'],
+  },
 };
 
-const statusLabel: Record<string, string> = {
-  reading: 'Currently Reading',
-  read:    'Read',
-  want:    'Want to Read',
+type Category = keyof typeof categories;
+
+const byCategory = {
+  technical:     allBooks.filter(b => b.data.category === 'technical'),
+  'non-fiction': allBooks.filter(b => b.data.category === 'non-fiction'),
+  fiction:       allBooks.filter(b => b.data.category === 'fiction'),
+  garbage:       allBooks.filter(b => b.data.category === 'garbage'),
 };
 
-const statusColor: Record<string, string> = {
-  reading: 'var(--amber)',
-  read:    'var(--phosphor)',
-  want:    'var(--muted)',
-};
-
-const allTags = [...new Set(allBooks.flatMap(b => b.data.tags))].sort();
+const statusLabel = { reading: 'Currently Reading', read: 'Read', want: 'Want to Read' };
+const statusColor = { reading: 'var(--amber)', read: 'var(--phosphor)', want: 'var(--muted)' };
 ---
 
 <Base title="Books - Saeed">
   <div class="container">
 
     <div class="page-verse page-verse--single" dir="rtl">
-        <p>وَاستَثْمِرِ العَقْلَ فِى عِلْمٍ وَفِي أَدَبِ</p>
-        <p>لَمْ يُخلَقِ العَقْلُ حَتَّى يُمْتَلَى سَفَهَا</p>
+      <p>وَاستَثْمِرِ العَقْلَ فِى عِلْمٍ وَفِي أَدَبِ</p>
+      <p>لَمْ يُخلَقِ العَقْلُ حَتَّى يُمْتَلَى سَفَهَا</p>
     </div>
 
     <div class="section-label" style="margin-bottom: 32px;">Books</div>
 
-    <p class="books-intro">
-      Things I've read, am reading, or intend to read. With notes.
-    </p>
+    <!-- Search -->
+    <div class="books-search-wrap">
+      <input type="text" id="books-search" class="books-search" placeholder="search by title or author..." autocomplete="off" />
+    </div>
 
-    <!-- Tag filter -->
-    <div class="tag-filter" id="books-tag-filter">
-      <button class="tag-btn active" data-tag="all">All</button>
-      {allTags.map(tag => (
-        <button class="tag-btn" data-tag={tag}>{tag}</button>
+    <!-- Category tabs -->
+    <div class="books-tabs" id="books-tabs">
+      {Object.entries(categories).map(([cat, def], i) => (
+        <button class={`books-tab${i === 0 ? ' active' : ''}`} data-cat={cat}>
+          {def.label}
+          <span class="books-tab-count">{byCategory[cat as Category].length}</span>
+        </button>
       ))}
     </div>
 
-    <!-- Sections by status -->
-    {(['reading', 'read', 'want'] as const).filter(s => byStatus[s].length > 0).map(status => (
-      <section class="books-section" data-status={status}>
-        <div class="books-section-label" style={`color: ${statusColor[status]}`}>
-          {statusLabel[status]}
-          <span class="books-count">{byStatus[status].length}</span>
-        </div>
-        <div class="books-grid" id={`books-grid-${status}`}>
-          {byStatus[status].map(book => (
-            <a href={`/books/${book.slug}`} class="book-card" data-tags={book.data.tags.join(',')}>
-              <div class="book-card-cover">
-                {book.data.cover ? (
-                  <img src={book.data.cover} alt={book.data.title} />
-                ) : (
-                  <div class="book-card-cover-placeholder">
-                    <span>{book.data.title.slice(0, 2).toUpperCase()}</span>
-                  </div>
-                )}
-              </div>
-              <div class="book-card-body">
-                <div class="book-card-title">{book.data.title}</div>
-                <div class="book-card-author">{book.data.author}</div>
-                {book.data.year && (
-                  <div class="book-card-year">{book.data.year}</div>
-                )}
-                {book.data.rating && status !== 'want' && (
-                  <div class="book-card-rating">
-                    {'★'.repeat(book.data.rating)}{'☆'.repeat(5 - book.data.rating)}
-                  </div>
-                )}
-                <div class="book-card-tags">
-                  {book.data.tags.map(tag => (
-                    <span class="book-tag">{tag}</span>
-                  ))}
-                </div>
-              </div>
-              <div class="book-card-arrow">→</div>
-            </a>
+    <!-- Topic filters per category -->
+    <div id="books-topics">
+      {Object.entries(categories).map(([cat, def], i) => (
+        <div class={`books-topic-row${i === 0 ? ' active' : ''}`} data-cat={cat}>
+          <button class="tag-btn active" data-topic="all">All</button>
+          {def.topics.map(topic => (
+            <button class="tag-btn" data-topic={topic}>{topic}</button>
           ))}
         </div>
-      </section>
+      ))}
+    </div>
+
+    <!-- Panels per category -->
+    {Object.entries(categories).map(([cat], i) => (
+      <div class={`books-cat-panel${i === 0 ? ' active' : ''}`} data-cat={cat}>
+        {byCategory[cat as Category].length === 0 ? (
+          <p class="books-empty">Nothing here yet.</p>
+        ) : (
+          ['reading', 'read', 'want'].filter(s =>
+            byCategory[cat as Category].some(b => b.data.status === s)
+          ).map(status => (
+            <section class="books-section" data-status={status}>
+              <div class="books-section-label" style={`color: ${statusColor[status as keyof typeof statusColor]}`}>
+                {statusLabel[status as keyof typeof statusLabel]}
+                <span class="books-count">
+                  {byCategory[cat as Category].filter(b => b.data.status === status).length}
+                </span>
+              </div>
+              <div class="books-grid">
+                {byCategory[cat as Category].filter(b => b.data.status === status).map(book => (
+                  <a
+                    href={`/books/${book.slug}`}
+                    class="book-card"
+                    data-tags={book.data.tags.join(',')}
+                    data-title={book.data.title.toLowerCase()}
+                    data-author={book.data.author.toLowerCase()}
+                  >
+                    <div class="book-card-cover">
+                      {book.data.cover ? (
+                        <img src={book.data.cover} alt={book.data.title} />
+                      ) : (
+                        <div class="book-card-cover-placeholder">
+                          <span>{book.data.title.slice(0, 2).toUpperCase()}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div class="book-card-body">
+                      <div class="book-card-title">{book.data.title}</div>
+                      <div class="book-card-author">{book.data.author}</div>
+                      {book.data.year && <div class="book-card-year">{book.data.year}</div>}
+                      {book.data.rating && status !== 'want' && (
+                        <div class="book-card-rating">
+                          {'★'.repeat(book.data.rating)}{'☆'.repeat(5 - book.data.rating)}
+                        </div>
+                      )}
+                      <div class="book-card-tags">
+                        {book.data.tags.map(tag => <span class="book-tag">{tag}</span>)}
+                      </div>
+                    </div>
+                    <div class="book-card-arrow">→</div>
+                  </a>
+                ))}
+              </div>
+            </section>
+          ))
+        )}
+      </div>
     ))}
 
   </div>
 </Base>
-
-
-
-

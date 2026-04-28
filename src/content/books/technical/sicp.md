@@ -6,6 +6,7 @@ status: want
 rating: 5
 cover: "/images/covers/sicp.jpg"
 tags: ["cs", "lisp", "programming", "theory"]
+category: technical
 description: "The MIT classic. Forces you to think about computation from first principles."
 relatedPosts: []
 ---

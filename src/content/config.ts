@@ -16,8 +16,11 @@ const bookSchema = z.object({
   status: z.enum(['read', 'reading', 'want']).default('read'),
   rating: z.number().min(1).max(5).optional(),
   cover: z.string().optional(),
+  category: z.enum(['technical', 'non-fiction', 'fiction', 'garbage']).default('technical'),
   tags: z.array(z.string()).default([]),
   description: z.string().optional(),
+  recommended: z.boolean().default(false),
+  recommendNote: z.string().optional(),
   relatedPosts: z.array(z.string()).default([]),
   draft: z.boolean().default(false),
 });

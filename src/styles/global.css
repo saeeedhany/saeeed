@@ -1,3 +1,8 @@
+/* ══════════════════════════════════════════════
+   global.css — import manifest
+   All rules live in src/styles/modules/
+══════════════════════════════════════════════ */
+
 @import './modules/base.css';
 @import './modules/nav.css';
 @import './modules/hero.css';

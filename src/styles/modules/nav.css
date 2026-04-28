@@ -1,3 +1,4 @@
+/* ── Nav ── */
 nav {
     position: fixed;
     top: 0;
@@ -50,6 +51,7 @@ nav.scrolled {
 .nav-links a:hover,
 .nav-links a.active { color: var(--cream); }
 
+/* ── Theme toggle ── */
 .theme-toggle {
     background: none;
     border: 1px solid var(--border);
@@ -64,6 +66,7 @@ nav.scrolled {
 
 .theme-toggle:hover { color: var(--cream); border-color: var(--muted); }
 
+/* ── Hamburger ── */
 .nav-hamburger {
     display: none;
     flex-direction: column;
@@ -88,6 +91,7 @@ nav.scrolled {
 .nav-hamburger.open span:nth-child(2) { opacity: 0; }
 .nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); background: var(--cream); }
 
+/* ── Mobile fullscreen menu ── */
 @keyframes menuSlideIn {
     from { opacity: 0; transform: translateY(-12px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -161,6 +165,7 @@ nav.scrolled {
 .nav-mobile-close span:nth-child(2) { transform: rotate(-45deg); }
 .nav-mobile-close:hover span { background: var(--cream); }
 
+/* ── Responsive ── */
 @media (max-width: 1254px) {
     .nav-hamburger { display: flex; }
     .nav-links { display: none; }

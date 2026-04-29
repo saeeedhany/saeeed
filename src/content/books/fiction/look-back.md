@@ -4,8 +4,8 @@ author: "Kiyotaka Oshiyama"
 year: 2024
 status: read
 category: fiction
-cover: "/images/covers/look--back.jpg"
 tags: ["manga", "film", "anime"]
+cover: "/images/covers/look--back.jpg"
 description: "A short film about two girls bonded by their love of drawing."
 relatedPosts: []
 recommended: true

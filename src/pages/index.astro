@@ -311,10 +311,10 @@ go(0, 1);
 
 /* Cover + hit zones */
 .rec-cover-wrap {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 0;
 }
 
 .rec-cover {
@@ -325,8 +325,6 @@ go(0, 1);
   overflow: hidden;
   background: var(--bg-3);
   flex-shrink: 0;
-  position: relative;
-  z-index: 1;
 }
 
 .rec-cover img {
@@ -350,12 +348,10 @@ go(0, 1);
   letter-spacing: 0.1em;
 }
 
-/* Prev/next hit zones — extend well outside the cover */
+/* Prev/next buttons sit inline beside the cover */
 .rec-hit {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 44px;
+  width: 32px;
+  height: 80px;
   background: none;
   border: none;
   cursor: pointer;
@@ -365,11 +361,8 @@ go(0, 1);
   align-items: center;
   justify-content: center;
   transition: color var(--transition);
-  z-index: 2;
+  flex-shrink: 0;
 }
-
-.rec-hit--prev { right: calc(100% - 14px); }
-.rec-hit--next { left:  calc(100% - 14px); }
 
 .rec-hit:hover { color: var(--muted); }
 
@@ -402,9 +395,7 @@ go(0, 1);
     gap: 24px;
     min-height: unset;
   }
-  .rec-cover-wrap { justify-content: flex-start; }
-  .rec-hit--prev { right: auto; left: -32px; }
-  .rec-hit--next { left: auto; right: -32px; }
-  .rec-dots { justify-content: flex-start; padding-right: 0; }
+  .rec-cover-wrap { justify-content: center; }
+  .rec-dots { justify-content: center; padding-right: 0; }
 }
 </style>

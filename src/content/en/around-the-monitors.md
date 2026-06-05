@@ -2,7 +2,7 @@
 title: "Understanding Computer Monitors: A Complete Guide to Display Technologies, Panel Types, and Image Quality"
 date: 2026-05-07
 lang: en
-cover: /images/monitor/monitor.jpeg
+cover: /images/monitor/monitor.webp
 tags: [monitors, IPS, VA, OLED]
 description: "A practical guide to computer monitors, covering the technologies and specifications that shape the viewing experience."
 ---

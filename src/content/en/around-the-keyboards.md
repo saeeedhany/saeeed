@@ -271,3 +271,13 @@ I know your brain might be overwhelmed by all this, but there is one more "brain
 
 We were talking about the three main points: Function, Feel, and Material.
 We've covered Function and Feel...
+
+Now Let's talk about Material!
+
+## The Material
+
+For me it depends on how much money could you spend on a keyboard.
+
+That's it here are some cool resources about this topic :
+
+
